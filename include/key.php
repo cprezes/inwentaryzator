@@ -1,6 +1,6 @@
 <?php
 
-$tmp = number_format(floatval(date("Ymd")) * 16062816, 0, ",", "");
+$tmp = number_format(floatval(date("Ymd")) * 1234578, 0, ",", ""); //wygeneruj własny token 
 $tmp2 = substr($tmp, 10);
 $tokien = Session::get("tokien");
   if (DEV==true) {  Session::set("tokien", $tokien);} // wywal ten zapis na produkcji  
