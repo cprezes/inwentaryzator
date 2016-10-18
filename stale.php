@@ -8,4 +8,4 @@ define( 'TB_INNE', 'inne' ); // table name
 define( 'DISPLAY_DEBUG', TRUE ); //display db errors?
 define( 'KONTO2', "kompy_poka" ); //konto z tylko z uprawnieniami tylko do SELECT to samo na prdukcji 
 define( 'KONTO2_PASS', "HbSL4v99GejIbR6K" ); //konto z tylko z uprawnieniami tylko do SELECT to samo na prdukcji 
-define( 'DEV', TRUE ); //display db errors?
+define( 'DEVELOP_VERSION', TRUE ); //if develop version ?
