@@ -1,15 +1,21 @@
 <?php
 
-$tmp = number_format(floatval(date("Ymd")) * 1234578, 0, ",", ""); //wygeneruj własny token 
+$token = 123456;
+
+$tmp = number_format(floatval(date("Ymd")) * $token, 0, ",", ""); //wygeneruj własny token 
 $tmp2 = substr($tmp, 10);
+if (DEVELOP_VERSION == true) {
+    Session::set("tokien", base64_encode($tmp2));
+}  // wywal ten zapis na produkcji  
 $tokien = Session::get("tokien");
-  if (DEV==true) {  Session::set("tokien", $tokien);} // wywal ten zapis na produkcji  
+
 If ((isset($_REQUEST['tokien'])) and ( !(empty($_REQUEST['tokien'])))) {
     $tokien = $_REQUEST["tokien"];
-     Session::set("tokien", $tokien);
+    Session::set("tokien", $tokien);
 } else {
     $tokien = Session::get("tokien");
 }
-if (!(base64_encode($tmp2) == $tokien)){
+if (!(base64_encode($tmp2) == $tokien)) {
     echo "Sesja wygasła";
-die();}
+    die();
+}

@@ -110,18 +110,18 @@ if ((isset($_GET["strona"]) and ( !(empty($_GET["strona"]))))) {
 
 If ((isset($_REQUEST['filtruje'])) and ( !(empty($_REQUEST['filtruje'])))) {
 
-    $numer = trim($numer, " \t\n\r\0\x0B");
-    $login = trim($login, " \t\n\r\0\x0B");
-    $domena = trim($domena, " \t\n\r\0\x0B");
-    $ip = trim($ip, " \t\n\r\0\x0B");
-    $mac = trim($mac, " \t\n\r\0\x0B");
-    $dysk = trim($dysk, " \t\n\r\0\x0B");
-    $pamiec = trim($pamiec, " \t\n\r\0\x0B");
-    $system = trim($system, " \t\n\r\0\x0B");
-    $model = trim($model, " \t\n\r\0\x0B");
-    $inne = trim($inne, " \t\n\r\0\x0B");
-    $data = trim($data, " \t\n\r\0\x0B");
-    $filtr = trim($filtr, " \t\n\r\0\x0B");
+    $numer = strtolower( trim($numer, " \t\n\r\0\x0B"));
+    $login = strtolower(  trim($login, " \t\n\r\0\x0B"));
+    $domena =strtolower(  trim($domena, " \t\n\r\0\x0B"));
+    $ip =strtolower(  trim($ip, " \t\n\r\0\x0B"));
+    $mac =strtolower(  trim($mac, " \t\n\r\0\x0B"));
+    $dysk =strtolower(  trim($dysk, " \t\n\r\0\x0B"));
+    $pamiec =strtolower(  trim($pamiec, " \t\n\r\0\x0B"));
+    $system =strtolower(  trim($system, " \t\n\r\0\x0B"));
+    $model = strtolower( trim($model, " \t\n\r\0\x0B"));
+    $inne =strtolower(  trim($inne, " \t\n\r\0\x0B"));
+    $data =strtolower(  trim($data, " \t\n\r\0\x0B"));
+    $filtr =strtolower(  trim($filtr, " \t\n\r\0\x0B"));
 
     Session::set("numer", $numer);
     Session::set("login", $login);
@@ -264,6 +264,7 @@ foreach ($results as $row) {
     . '</td><td>' . $row['model'] . '</td><td>' . $row['inne'] . '</td><td>' . $row['data'] . "</td><td>". "<a href=\"inne.php?filtruje=1&numer=". $row['nazwa']."\"><center> Inne </center></a></td>";
 }
 echo '</tbody></table></div>';
+include 'paginacja.php';
 ?>
 
     </body>

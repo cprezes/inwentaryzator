@@ -8,7 +8,7 @@
 
  Dual licensed: GPL v2 and MIT, see texts at http://opensource.org/licenses/
 */
- 
+ include_once 'stale.php';
  include 'include/session.php';
  Session::init();
  include 'include/key.php';

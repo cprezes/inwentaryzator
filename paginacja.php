@@ -3,15 +3,8 @@
 
 
 echo "(Rekordów $wierszy. Stron ". $stron .")";
-      
 
-//if( $strona <> 1  )
-//{
     print(" [<a href = '". $adres_tmp ."strona=1 '>Pierwsza</a>]... ");
-//}
-
-
-
 
 for ($i=-20; $i<20 ; $i++)
 {
@@ -21,10 +14,6 @@ for ($i=-20; $i<20 ; $i++)
  
 
 }
-
-
-
-
 
 if( $strona <> $stron )
 {
