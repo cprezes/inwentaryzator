@@ -5,13 +5,12 @@
 
 include_once 'include/header.php';
 include_once 'loader.php';
-include_once 'include/key.php';
 $adres_tmp = basename($_SERVER['PHP_SELF']) . "?";
 $adres_url = ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER["REQUEST_URI"];
 Session::set("AdresPowrotu", $adres_url);
 Session::set("AdresFiltru", $adres_tmp);
 
-echo "<div class=\"topright\"><a href=\"db.php\">Raporty zaawansowane w SQL </a></div>";
+echo "<div class=\"topright\"> <a href=\"raport/\">Raporty gotowe  </a> | <a href=\"db.php\"> zaawansowane w SQL</a> </div>";
 @ Session::set("raporty_user", KONTO2);
 @ Session::set("raporty_pass", KONTO2_PASS);
 @ Session::set("raporty_host", DB_HOST);
