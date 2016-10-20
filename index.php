@@ -9,8 +9,7 @@ include_once 'include/baza.php';
 
 if( empty($_REQUEST['nazwa'])){
 
-    
-
+    die();
 }
  else {
     
