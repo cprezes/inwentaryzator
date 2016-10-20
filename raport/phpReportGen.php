@@ -28,7 +28,7 @@ class phpReportGenerator {
         //echo "modified_width : ".$this->modified_width."<br>"; 
 
         if (!is_resource($this->mysql_resource))
-            die("<br>Rapot jest nie poprawy");
+            die("<br>Zapytanie nie jest poprawne");
 
         /*
          * Lets calculate how many fields are there in supplied resource
