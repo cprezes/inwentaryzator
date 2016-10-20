@@ -12,7 +12,7 @@ If ((isset($_REQUEST["c27"])) and ( !(empty($_REQUEST["c27"]))))
 If ((isset($_REQUEST["c3"])) and ( !(empty($_REQUEST["c3"]))))
     $query = $_REQUEST["c3"];
 If ((isset($_REQUEST["usun"])) and ( !(empty($_REQUEST["usun"]))))
-    $usun = "usun";
+    $usun = "0"; else $usun = "1"; //tu jest odwrotna logika 
 If ((isset($_REQUEST['id'])) and ( !(empty($_REQUEST['id']))))
     $id = $_REQUEST["id"];
 
@@ -23,11 +23,11 @@ $database = DB::getInstance();
 if (id > 0) {
 
 
-    @ $insert = array(
+     $insert = array(
         'user' => $user,
         'opis' => $opis,
         'query' => $query,
-        'usun' => $usun
+        'widoczny' => $usun
     );
 
     var_dump($insert);
@@ -35,7 +35,10 @@ if (id > 0) {
 $database->insert( 'zapytania', $insert );
 } else {
     $update = array(
-        'widoczny' => "nie"
+        'widoczny' => $usun,
+        'user' => $user,
+        'opis' => $opis,
+        'query' => $query,
        );
 
     $where_clause = array(

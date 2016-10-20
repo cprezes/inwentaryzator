@@ -7,7 +7,7 @@ echo "<div class=\"text-center\"><a href=\"edytuj.php?numer=-1\"><center>Nowy ra
 
 $database = new DB();
 $database = DB::getInstance();
-$query = "SELECT * FROM zapytania WHERE widoczny IS NULL ORDER BY id DESC";
+$query = "SELECT * FROM zapytania WHERE widoczny  like '1' ORDER BY id DESC ";
 $results = $database->get_results($query);
 echo "<div>    <table class=\"table table-bordered table-hover table-condensed \" ><tbody>";
 foreach ($results as $row) {
