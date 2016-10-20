@@ -20,7 +20,7 @@ If ((isset($_REQUEST['id'])) and ( !(empty($_REQUEST['id']))))
 $database = new DB();
 $database = DB::getInstance();
 
-if (id > 0) {
+if ($id < 0) {
 
 
      $insert = array(

@@ -28,7 +28,7 @@ class phpReportGenerator {
         //echo "modified_width : ".$this->modified_width."<br>"; 
 
         if (!is_resource($this->mysql_resource))
-            die("User doesn't supply any valid mysql resource after executing query result");
+            die("<br>Rapot jest nie poprawy");
 
         /*
          * Lets calculate how many fields are there in supplied resource
