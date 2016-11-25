@@ -1,8 +1,4 @@
-
-
 <?php
-
-
 include_once 'include/header.php';
 include_once 'loader.php';
 $adres_tmp = basename($_SERVER['PHP_SELF']) . "?";
@@ -55,7 +51,7 @@ If ((isset($_REQUEST['czysc'])) and ( !(empty($_REQUEST['czysc'])))) {
     Session::set("inne", $inne);
     Session::set("data", $data);
     Session::set("filtr", $filtr);
-    
+
     Session::set("numer_ch", $numer_ch);
     Session::set("login_ch", $login_ch);
     Session::set("domena_ch", $domena_ch);
@@ -68,7 +64,6 @@ If ((isset($_REQUEST['czysc'])) and ( !(empty($_REQUEST['czysc'])))) {
     Session::set("inne_ch", $inne_ch);
     Session::set("data_ch", $data_ch);
     Session::set("filtr_ch", $filtr_ch);
-	
 }
 If ((isset($_REQUEST['off'])) and ( !(empty($_REQUEST['off']))))
     Session::destroy();
@@ -105,22 +100,22 @@ if ((isset($_GET["strona"]) and ( !(empty($_GET["strona"]))))) {
     $strona = 1;
 }
 
-
+include_once 'include/ogonki.php';
 
 If ((isset($_REQUEST['filtruje'])) and ( !(empty($_REQUEST['filtruje'])))) {
 
-    $numer = strtolower( trim($numer, " \t\n\r\0\x0B"));
-    $login = strtolower(  trim($login, " \t\n\r\0\x0B"));
-    $domena =strtolower(  trim($domena, " \t\n\r\0\x0B"));
-    $ip =strtolower(  trim($ip, " \t\n\r\0\x0B"));
-    $mac =strtolower(  trim($mac, " \t\n\r\0\x0B"));
-    $dysk =strtolower(  trim($dysk, " \t\n\r\0\x0B"));
-    $pamiec =strtolower(  trim($pamiec, " \t\n\r\0\x0B"));
-    $system =strtolower(  trim($system, " \t\n\r\0\x0B"));
-    $model = strtolower( trim($model, " \t\n\r\0\x0B"));
-    $inne =strtolower(  trim($inne, " \t\n\r\0\x0B"));
-    $data =strtolower(  trim($data, " \t\n\r\0\x0B"));
-    $filtr =strtolower(  trim($filtr, " \t\n\r\0\x0B"));
+    $numer = ogonki(strtolower(trim($numer, " \t\n\r\0\x0B")));
+    $login = ogonki(strtolower(trim($login, " \t\n\r\0\x0B")));
+    $domena = ogonki(strtolower( trim($domena, " \t\n\r\0\x0B")));
+    $ip = ogonki(strtolower(trim($ip, " \t\n\r\0\x0B")));
+    $mac = ogonki(strtolower(trim($mac, " \t\n\r\0\x0B")));
+    $dysk = ogonki(strtolower(trim($dysk, " \t\n\r\0\x0B")));
+    $pamiec = ogonki(strtolower(trim($pamiec, " \t\n\r\0\x0B")));
+    $system = ogonki(strtolower(trim($system, " \t\n\r\0\x0B")));
+    $model = ogonki( strtolower(trim($model, " \t\n\r\0\x0B")));
+    $inne = ogonki(strtolower(trim($inne, " \t\n\r\0\x0B")));
+    $data = ogonki(strtolower(trim($data, " \t\n\r\0\x0B")));
+    $filtr = ogonki(strtolower(trim($filtr, " \t\n\r\0\x0B")));
 
     Session::set("numer", $numer);
     Session::set("login", $login);
@@ -134,7 +129,7 @@ If ((isset($_REQUEST['filtruje'])) and ( !(empty($_REQUEST['filtruje'])))) {
     Session::set("inne", $inne);
     Session::set("data", $data);
     Session::set("filtr", $filtr);
-    
+
     Session::set("numer_ch", $numer_ch);
     Session::set("login_ch", $login_ch);
     Session::set("domena_ch", $domena_ch);
@@ -218,7 +213,7 @@ $stron = (intval($wierszy / 100)) + 1;
 
 $query = "SELECT * FROM `komputery` $filtr  ORDER BY id DESC LIMIT " . ($strona - 1) * 100 . ",100 ";
 $results = $database->get_results($query);
-echo "<p>" ;
+echo "<p>";
 include 'paginacja.php';
 echo "</p><div>    <table class=\"table table-bordered table-hover table-condensed \" style=\ width: 100%;\" >       
                 <thead style=\"  white-space: nowrap; \"><tr><th>Nazwa<a href = \"unique.php?unike=nazwa\">[U]</a></th>
@@ -231,12 +226,12 @@ echo "</p><div>    <table class=\"table table-bordered table-hover table-condens
                 <th>Wersja systemu<a href = \"unique.php?unike=system\">[U]</a></th>
                 <th>Id sprzętu<a href = \"unique.php?unike=model\">[U]</a></th>
                 <th>Admini Lokalni<a href = \"unique.php?unike=inne\">[U]</a></th>
-                <th>Data</th>
+                <th>Data [dni] </th>
                 <form method=\"post\" action=\"$adres_tmp\" enctype=\"multipart/form-data\"><td>"
  . "<input type=\"submit\"  class=\"btn btn-default\" value=\"czyść\">"
  . "<input type=\"hidden\" value=\"1\"  name=\"czysc\"></td></form>
             <form method=\"post\" action=\"$adres_url\" enctype=\"multipart/form-data\"></thead>"
-  ?>              
+?>              
 
 <?php
 echo "<tbody><tr><td><input class=\"form-control\" type=\"text\" value=\"$numer\" name=\"numer\"  class=\"inputbox\"></td>
@@ -256,14 +251,14 @@ echo "<tbody><tr><td><input class=\"form-control\" type=\"text\" value=\"$numer\
             </form>";
 
 
-
+require_once 'include/kolorki.php';
 foreach ($results as $row) {
-    echo "<tr><td>" . $row['nazwa'] ."</td><td><div id=\"" .$row['login']. "\" onmousedown=\"javascript:zmienText(this,'". $row['login'] . "')\">".$row['login'].'</div></td><td>' . $row['domena'] . '</td><td>' . $row['ip']
+    echo "<tr><td>" . $row['nazwa'] . "</td><td><div id=\"" . $row['login'] . "\" onmousedown=\"javascript:zmienText(this,'" . $row['login'] . "')\">" . $row['login'] . '</div></td><td>' . $row['domena'] . '</td><td>' . $row['ip']
     . '</td><td>' . $row['mac'] . '</td><td>' . $row['dysk'] . '</td><td>' . $row['pamiec'] . '</td><td>' . $row['system']
-    . '</td><td>' . $row['model'] . '</td><td>' . $row['inne'] . '</td><td>' . $row['data'] . "</td><td>". "<a href=\"inne.php?filtruje=1&numer=". $row['nazwa']."\"><center> Inne </center></a></td>";
+    . '</td><td>' . $row['model'] . '</td><td>' . $row['inne'] . '</td><td>' . $row['data'] . " [" .  ileDni($row['data'])  . "]</td><td>" . "<a href=\"inne.php?filtruje=1&numer=" . $row['nazwa'] . "\"><center> Inne </center></a></td>";
 }
 echo '</tbody></table></div>';
 include 'paginacja.php';
 ?>
 
-    </body>
+</body>

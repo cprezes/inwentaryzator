@@ -12,7 +12,7 @@ $root_serwera = ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https
 <script language="javascript">
    function zmienText( elmnt , id )
        nanoajax.ajax({url: "<?php echo $root_serwera; ?>include/user.php", method: 'POST',  body: "login=" + id }, function ( header, resp) {
-       elmnt.innerHTML = id  +  " |"  + resp.trim() ;
+       elmnt.innerHTML = id  +  " | "  + resp.trim() ;
     });
 </script> 
 </head>    

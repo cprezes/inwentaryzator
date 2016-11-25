@@ -19,3 +19,5 @@ if (!(base64_encode($tmp2) == $tokien)) {
     echo "Sesja wygasła";
     die();
 }
+
+
