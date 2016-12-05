@@ -253,7 +253,7 @@ echo "<tbody><tr><td><input class=\"form-control\" type=\"text\" value=\"$numer\
 
 require_once 'include/kolorki.php';
 foreach ($results as $row) {
-    echo "<tr><td>" . $row['nazwa'] . "</td><td><div id=\"" . $row['login'] . "\" onmousedown=\"javascript:zmienText(this,'" . $row['login'] . "')\">" . $row['login'] . '</div></td><td>' . $row['domena'] . '</td><td>' . $row['ip']
+    echo "<tr><td>" . $row['nazwa'] . "</td><td><div id=\"" . $row['login'] . "\" onmousedown=\"zmienText(this,'" . $row['login'] . "')\">" . $row['login'] . '</div></td><td>' . $row['domena'] . '</td><td>' . $row['ip']
     . '</td><td>' . $row['mac'] . '</td><td>' . $row['dysk'] . '</td><td>' . $row['pamiec'] . '</td><td>' . $row['system']
     . '</td><td>' . $row['model'] . '</td><td>' . $row['inne'] . '</td><td>' . $row['data'] . " [" .  ileDni($row['data'])  . "]</td><td>" . "<a href=\"inne.php?filtruje=1&numer=" . $row['nazwa'] . "\"><center> Inne </center></a></td>";
 }

@@ -1,2 +1,2 @@
 # inwentaryzator
-Przeglądarka bazy w której odkładaj się dane komputerów.
+This site is a key component of the inventory of hardware in my company

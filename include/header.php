@@ -10,10 +10,10 @@ $root_serwera = ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https
 <script language="javascript" src="<?php echo $root_serwera; ?>js/bootstrap.js" ></script>
 <script language="javascript" src="<?php echo $root_serwera; ?>js/nanoajax.min.js"></script>  
 <script language="javascript">
-   function zmienText( elmnt , id )
+   function zmienText( elmnt , id ){
        nanoajax.ajax({url: "<?php echo $root_serwera; ?>include/user.php", method: 'POST',  body: "login=" + id }, function ( header, resp) {
        elmnt.innerHTML = id  +  " | "  + resp.trim() ;
-    });
+    });};
 </script> 
 </head>    
     <body>
