@@ -15,6 +15,7 @@ if (empty($_REQUEST['nazwa'])) {
     If ((isset($_REQUEST["monitor"])) and ( !(empty($_REQUEST["monitor"])))) { $monitor = base64_decode($_REQUEST["monitor"]);    $wichDb = "monitor";}
     If ((isset($_REQUEST["instalacje"])) and ( !(empty($_REQUEST["instalacje"])))) {$instalacje = base64_decode($_REQUEST["instalacje"]); $wichDb = "instalacje";} 
         If ((isset($_REQUEST["kiedy"])) and ( !(empty($_REQUEST["kiedy"])))) {$kiedy = base64_decode($_REQUEST["kiedy"]); $wichDb = "instalacje";} 
+        
     $database = new DB();
     $database = DB::getInstance();
 
@@ -27,32 +28,39 @@ if (empty($_REQUEST['nazwa'])) {
 
         $database->insert('inne', $insert);
     } elseif ($wichDb == "instalacje") {
-
-        $check_user = array(
-            'nazwa' => $nazwa
-        );
-        $exists = $database->exists('instalacje', 'nazwa', $check_user);
-        if ($exists) {
-            $update = array(
-                'instalacje' => $instalacje,
-                    'kiedy' => $kiedy
-                    );
-            $update_where = array(
-                'nazwa' => $nazwa,
-                    );
-            $database->update('instalacje', $update, $update_where, 1);
-        } else {
-
-            $insert = array(
-                'nazwa' => $nazwa,
-                'instalacje' => $instalacje,
-                'kiedy'=>$kiedy
-                    
-            );
-
-            $database->insert('instalacje', $insert);
+     
+      $where = array( 'nazwa' => $nazwa );
+      $database->delete( 'instalacje', $where);
+        
+      
+        require_once  'include/ogonki.php';
+        $out = array();
+        $output = parseTable(TableHelp($instalacje));
+        
+        foreach ($output as $field) {
+            $field["Nazwa"] = $nazwa;
+            $field["Kiedy"] = $kiedy;
+            array_push($out, $field);
         }
-    } else {
+     
+    
+     
+ 
+     $fields = array(
+         'AppName', 
+         'DisplayVersion',
+         'Publisher',
+         'InstallDate',
+         'WindowsInstaller',
+         'NoRemove',
+         'nazwa',
+         'kiedy'
+          );
+ 
+      $database->insert_multi( 'instalacje', $fields, $out );
+
+       }
+    else {
         exit();
     }
 }
