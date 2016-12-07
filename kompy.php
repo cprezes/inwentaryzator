@@ -175,27 +175,27 @@ $filtr_ch = Session::get("filtr_ch");
 
 
 if (strlen($numer) > 0)
-    $filtr = $filtr . " nazwa LIKE \"%" . $numer . "%\" AND ";
+    $filtr = $filtr . "  lower(nazwa) LIKE \"%" . $numer . "%\" AND ";
 if (strlen($login) > 0)
-    $filtr = $filtr . " login LIKE \"%" . $login . "%\" AND ";
+    $filtr = $filtr . " lower(login) LIKE \"%" . $login . "%\" AND ";
 if (strlen($domena) > 0)
-    $filtr = $filtr . " domena LIKE \"%" . $domena . "%\" AND ";
+    $filtr = $filtr . " lower(domena) LIKE \"%" . $domena . "%\" AND ";
 if (strlen($ip) > 0)
-    $filtr = $filtr . " ip  LIKE \"%" . $ip . "%\" AND ";
+    $filtr = $filtr . " lower(ip)  LIKE \"%" . $ip . "%\" AND ";
 if (strlen($mac) > 0)
-    $filtr = $filtr . " mac   LIKE \"%" . $mac . "%\" AND ";
+    $filtr = $filtr . " lower(mac)   LIKE \"%" . $mac . "%\" AND ";
 if (strlen($dysk) > 0)
-    $filtr = $filtr . " dysk  LIKE \"%" . $dysk . "%\" AND ";
+    $filtr = $filtr . " lower(dysk)  LIKE \"%" . $dysk . "%\" AND ";
 if (strlen($pamiec) > 0)
-    $filtr = $filtr . " pamiec LIKE \"%" . $pamiec . "%\" AND ";
+    $filtr = $filtr . " lower(pamiec) LIKE \"%" . $pamiec . "%\" AND ";
 if (strlen($system) > 0)
-    $filtr = $filtr . " system LIKE \"%" . $system . "%\" AND ";
+    $filtr = $filtr . " lower(system) LIKE \"%" . $system . "%\" AND ";
 if (strlen($model) > 0)
-    $filtr = $filtr . " model LIKE \"%" . $model . "%\" AND ";
+    $filtr = $filtr . " lower(model) LIKE \"%" . $model . "%\" AND ";
 if (strlen($inne) > 0)
-    $filtr = $filtr . " inne  LIKE \"%" . $inne . "%\" AND ";
+    $filtr = $filtr . " lower(inne)  LIKE \"%" . $inne . "%\" AND ";
 if (strlen($data) > 0)
-    $filtr = $filtr . " data LIKE \"%" . $data . "%\" ";
+    $filtr = $filtr . " lower(data) LIKE \"%" . $data . "%\" AND  ";
 if (strlen($filtr) > 0)
     $filtr = " WHERE " . $filtr . " 1 ";
 
@@ -203,7 +203,7 @@ if (strlen($filtr) > 0)
 
 
 //$filtr="";
-
+$filtr= strtolower($filtr);
 $database = new DB();
 $database = DB::getInstance();
 $query = "SELECT COUNT(*) as ile FROM `komputery` $filtr ";
@@ -255,7 +255,7 @@ require_once 'include/kolorki.php';
 foreach ($results as $row) {
     echo "<tr><td>" . $row['nazwa'] . "</td><td><div id=\"" . $row['login'] . "\" onmousedown=\"zmienText(this,'" . $row['login'] . "')\">" . $row['login'] . '</div></td><td>' . $row['domena'] . '</td><td>' . $row['ip']
     . '</td><td>' . $row['mac'] . '</td><td>' . $row['dysk'] . '</td><td>' . $row['pamiec'] . '</td><td>' . $row['system']
-    . '</td><td>' . $row['model'] . '</td><td>' . $row['inne'] . '</td><td>' . $row['data'] . " [" .  ileDni($row['data'])  . "]</td><td>" . "<a href=\"inne.php?filtruje=1&numer=" . $row['nazwa'] . "\"><center> Inne </center></a></td>";
+    . '</td><td>' . $row['model'] . '</td><td>' . $row['inne'] . '</td><td>' . $row['data'] . " [" .  ileDni($row['data'])  . "]</td><td>" . "<a href=\"inne.php?filtruje=1&numer=" . $row['nazwa'] . "\"><center> Monitory </center></a><a href=\"instalacje.php?filtruje=1&numer=" . $row['nazwa'] . "\"><center> Instalacje </center></a></td>";
 }
 echo '</tbody></table></div>';
 include 'paginacja.php';

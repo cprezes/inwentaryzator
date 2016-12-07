@@ -18,31 +18,27 @@ include_once 'include/key.php';
 Session::set("AdresFiltru", $adres_tmp);
 if ((!empty(Session::get("AdresPowrotu")))==FALSE)  Session::set("AdresPowrotu", $adres_url);
 echo " <div class=\"topright\"><a href=\"". Session::get("AdresPowrotu"). "\"> Powrót >></a></div> ";
-$TB_nazwa=TB_INNE;
+$TB_nazwa=TB_ISTAL;
 
 $nazwa="";
-$numer = "";
-$login = "";
-$monitor = "";
-//$ip = "";
+$numer="";
+$instalacje = "";
+
 $data="";
 $filtr = "";
 $numer_ch = "";
-$login_ch = "";
-$monitor_ch = "";
-//$ip_ch = "";
+$instalacje_ch = "";
+
 $filtr_ch = "";
 
 If ((isset($_REQUEST['czysc'])) and ( !(empty($_REQUEST['czysc'])))) {
 
     Session::set("numer", $numer);
-    Session::set("login", $login);
-    Session::set("monitor", $monitor);
+    Session::set("instalacje", $instalacje);
    // Session::set("ip", $ip);
      
     Session::set("numer_ch", $numer_ch);
-    Session::set("login_ch", $login_ch);
-    Session::set("monitor_ch", $monitor_ch);
+    Session::set("instalacje_ch", $instalacje_ch);
   //  Session::set("ip_ch", $ip_ch);
 	
 }
@@ -55,8 +51,8 @@ If ((isset($_REQUEST["login"])) and ( !(empty($_REQUEST["login"]))))
     $login = $_REQUEST["login"];
 //If ((isset($_REQUEST["domena"])) and ( !(empty($_REQUEST["domena"]))))
  //   $domena = $_REQUEST["domena"];
-If ((isset($_REQUEST["monitor"])) and ( !(empty($_REQUEST["monitor"]))))
-    $monitor = $_REQUEST["monitor"];
+If ((isset($_REQUEST["instalacje"])) and ( !(empty($_REQUEST["instalacje"]))))
+    $instalacje = $_REQUEST["instalacje"];
 
 if ((isset($_GET["strona"]) and ( !(empty($_GET["strona"]))))) {
     $strona = $_GET["strona"];
@@ -69,38 +65,34 @@ if ((isset($_GET["strona"]) and ( !(empty($_GET["strona"]))))) {
 If ((isset($_REQUEST['filtruje'])) and ( !(empty($_REQUEST['filtruje'])))) {
 
     $numer = trim($numer, " \t\n\r\0\x0B");
-    $login = trim($login, " \t\n\r\0\x0B");
 
-    $monitor = str_replace("?", "#", trim($monitor, " \t\n\r\0\x0B"));
+
+    $instalacje = str_replace("?", "#", trim($instalacje, " \t\n\r\0\x0B"));
 
 
     Session::set("numer", $numer);
-    Session::set("login", $login);
-    Session::set("monitor", $monitor);
+
+    Session::set("instalacje", $instalacje);
     Session::set("numer_ch", $numer_ch);
-    Session::set("login_ch", $login_ch);
-    Session::set("monitor_ch", $monitor_ch);
+
+    Session::set("instalacje_ch", $instalacje_ch);
 
 }
 
 $numer = Session::get("numer");
-$login = Session::get("login");
-$monitor = Session::get("monitor");
+$instalacje = Session::get("instalacje");
 
 
 $numer_ch = Session::get("numer_ch");
-$login_ch = Session::get("login_ch");
-$monitor_ch = Session::get("monitor_ch");
+$instalacje_ch = Session::get("instalacje_ch");
 
 
 
 
 if (strlen($numer) > 0)
     $filtr = $filtr . " lower(nazwa) LIKE \"%" . $numer . "%\" AND ";
-if (strlen($login) > 0)
-    $filtr = $filtr . " lower(login) LIKE \"%" . $login . "%\" AND ";
-if (strlen($monitor) > 0)
-    $filtr = $filtr . " lower(monitor)  LIKE \"%" . $monitor . "%\" AND ";
+if (strlen($instalacje) > 0)
+    $filtr = $filtr . " lower(instalacje)  LIKE \"%" . $instalacje . "%\" AND ";
 if (strlen($filtr) > 0)
     $filtr = " WHERE " . $filtr . " 1 ";
 
@@ -116,13 +108,13 @@ $wierszy = floatval($results[0]['ile']);
 $stron = (intval($wierszy / 100)) + 1;
 
 $query = "SELECT * FROM `$TB_nazwa` $filtr  ORDER BY id DESC LIMIT " . ($strona - 1) * 100 . ",100 ";
+
 $results = $database->get_results($query);
 echo "<p>" ;
 include 'paginacja.php';
 echo "</p><div>    <table class=\"table table-bordered table-hover table-condensed \" style=\ width: 100%;\" >       
                 <thead style=\"  white-space: nowrap; \"><tr><th>Nazwa<a href = \"unique.php?unike=nazwa&inne=1\">[U]</a></th>
-                <th>Login<a href = \"unique.php?unike=monitor&inne=1\">[U]</a></th>
-                <th>Wykryte monitory (w laptopach monitor może być niewidoczny)<a href = \"unique.php?unike=monitor&inne=1\">[U]</a></th>
+                <th>Programy</a></th>
                 <th>Data</th>
                 <form method=\"post\" action=\"$adres_tmp\" enctype=\"multipart/form-data\"><td>"
  . "<input type=\"submit\"  class=\"btn btn-default\" value=\"czyść\">"
@@ -132,8 +124,7 @@ echo "</p><div>    <table class=\"table table-bordered table-hover table-condens
 
 <?php
 echo "<tbody><tr><td><input class=\"form-control\" type=\"text\" value=\"$numer\" name=\"numer\"  class=\"inputbox\"></td>
-                <td><input class=\"form-control\" type=\"text\" value=\"$login\" name=\"login\"  class=\"inputbox\"></td>
-                <td><input class=\"form-control\" type=\"text\" value=\"$monitor\" name=\"monitor\"  class=\"inputbox\"></td>
+                                <td><input class=\"form-control\" type=\"text\" value=\"$instalacje\" name=\"instalacje\"  class=\"inputbox\"></td>
                 <td><input class=\"form-control\" type=\"text\" value=\"$data\"  name=\"data\"  class=\"inputbox\"></td>
                 <td><input class=\"btn btn-primary\" type=\"submit\"   value=\"filtruj\">
                 <input type=\"hidden\" value=\"$strona\" name=\"strona\">
@@ -141,10 +132,10 @@ echo "<tbody><tr><td><input class=\"form-control\" type=\"text\" value=\"$numer\
             </form>";
 
 
-
+include_once 'include/ogonki.php';
 foreach ($results as $row) {
-    echo "<tr><td>" . $row['nazwa'] . "</td><td><div id=\"" .$row['login']. "\" onmousedown=\"javascript:zmienText(this,'". $row['login'] . "')\">".$row['login'].'</div></td><td>' . $row['monitor'] . '</td><td>'
- . $row['data'] . "</td>";
+    echo "<tr><td>" . $row['nazwa'] . "</td><td><center>" . TableHelp($row['instalacje']) . '</center></td><td>'
+ . $row['kiedy'] . "</td>";
 }
 echo '</tbody></table></div>';
 ?>

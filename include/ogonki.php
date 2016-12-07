@@ -25,3 +25,15 @@ function ogonki($string)
  );
  return strtr($string, $utf8iso);
 }
+
+function TableHelp($string)
+{
+ $trTd = array(
+        "[+]" => "<",
+	"[-]" => ">"
+	
+ );
+ return strtr($string, $trTd);
+}
+
+
