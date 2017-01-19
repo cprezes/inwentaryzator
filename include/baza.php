@@ -76,7 +76,7 @@ class DB
         }
         else
         {
-            trigger_error( $message );
+            echo( $message );
         }
 
         if( !defined( 'DISPLAY_DEBUG' ) || ( defined( 'DISPLAY_DEBUG' ) && DISPLAY_DEBUG ) )
@@ -611,7 +611,6 @@ class DB
         $sql .= $fields .' VALUES '. $values;
 
         $query = $this->link->query( $sql );
-
         if( $this->link->error )
         {
             $this->log_db_errors( $this->link->error, $sql );

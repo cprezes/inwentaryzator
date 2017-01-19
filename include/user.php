@@ -9,7 +9,7 @@ If ((isset($_REQUEST['login'])) and ( !(empty($_REQUEST['login']))))
 
 $database = new DB();
 $database = DB::getInstance();
-$query = "SELECT `users`.`opis` as 'opis' "
+$query = "SELECT `users`.`opis` as 'opis', `users`.`MobilePhone` as 'telefon' "
         . "FROM "
         . "`users`, `komputery` "
         . "WHERE "
@@ -18,7 +18,9 @@ $query = "SELECT `users`.`opis` as 'opis' "
 $results = $database->get_results($query); 
 
 if  (@strlen($results[0]["opis"])> 1) {
-  echo  trim ( $results[0]["opis"] , " \t\n\r\0\x0B" ) ;
+       echo     trim ( $results[0]["opis"] , " \t\n\r\0\x0B" ) ." [". trim ( $results[0]["telefon"] , " \t\n\r\0\x0B" )."]" ;
+          
+             
 } else {
  echo $login ;
 }
