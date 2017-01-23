@@ -56,7 +56,7 @@ class phpReportGenerator {
 
         //Check If our table has to be surrounded by an additional table
         //which increase style of this table
-        echo '<div><table  class="table table-bordered table-hover table-condensed" style="width: 100%;">';
+        echo '<div><table class="table table-bordered table-hover table-condensed" style="width: 100%;" >';
         echo "<thead style=\"  white-space: nowrap; \">";
 
         //Header Draw
@@ -123,4 +123,4 @@ class phpReportGenerator {
 
 }
 
-?>
+

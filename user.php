@@ -14,7 +14,7 @@ if (empty($_REQUEST['login'])) {
         $tokien = $_REQUEST["tokien"];
         if (base64_encode($tmp2) == $tokien) {
 
-echo '<link rel="stylesheet" href="css/bootstrap.css" /> ';
+echo '<link rel="stylesheet" href="css/bootstrap.css" /> <link rel="stylesheet" href="css/style.css" />';
             include_once("raport/phpReportGen.php");
             $prg = new phpReportGenerator();
             $query = "select login as Login , opis as Imie_Nazwisko, EmailAddress as E_mail, MobilePhone as Telefon, "

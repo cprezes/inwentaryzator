@@ -9,7 +9,7 @@ If ((isset($_REQUEST['login'])) and ( !(empty($_REQUEST['login']))))
 
 $database = new DB();
 $database = DB::getInstance();
-$query = "SELECT `users`.`opis` as 'opis', `users`.`MobilePhone` as 'telefon' "
+$query = "SELECT `users`.`opis` as 'opis', `users`.`OfficePhone` as 'telefon' "
         . "FROM "
         . "`users`, `komputery` "
         . "WHERE "
