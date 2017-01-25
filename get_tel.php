@@ -5,7 +5,8 @@
 	$prg = new phpReportGenerator();
 
 
-	mysql_connect(DB_HOST,KONTO2,KONTO2_PASS);
+	$link= mysql_connect(DB_HOST,KONTO2,KONTO2_PASS);
+	mysql_set_charset('utf8',$link);
 	mysql_select_db(DB_NAME);
         
                 $res = mysql_query("SELECT `data` FROM `users` WHERE `id` = 1 " );

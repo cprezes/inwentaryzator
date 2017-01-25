@@ -21,7 +21,9 @@ echo '<link rel="stylesheet" href="css/bootstrap.css" /> <link rel="stylesheet" 
                     . "case Enabled when 'True' then '' when 'False' then 'Zablokowany'  end as Czy_zablokowany "
                     . ", data as Sprawdzono from users";
        
-            mysql_connect(DB_HOST, KONTO2, KONTO2_PASS);
+            $link= mysql_connect(DB_HOST,KONTO2,KONTO2_PASS);
+            mysql_set_charset('utf8',$link);
+            
             mysql_select_db(DB_NAME);
             $res = mysql_query($query);
             $prg->mysql_resource = $res;
