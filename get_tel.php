@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <?php
         include_once("stale.php");
 	include_once("raport/phpReportGen.php");
@@ -18,6 +19,21 @@
         
        
                 echo '<link rel="stylesheet" href="css/bootstrap.css" /> <link rel="stylesheet" href="css/style.css" />';
-           
+   ?>
+<style type="text/css">
+
+table{
+border-top:1px solid #000;
+margin-left : auto; 
+margin-right : auto; 
+}
+tr{
+   border:1px solid #000;
+   border:1px solid #000;
+}
+td{border:1px solid #000;}
+
+</style>
+<?php           
             $prg->generateReport();  
            
