@@ -30,14 +30,14 @@ echo "Interpretacja: Kolumna o nazwie <mark>$unike</mark> jest główną kolumna
 
 <link rel="stylesheet" href="<?php echo $root_serwera; ?>css/slider.css" />
 
-<script language="javascript" src="<?php echo $root_serwera; ?>js/jq311.js" ></script>
-    <script language="javascript" src="<?php echo $root_serwera; ?>js/slider.js" ></script>
+<script  src="<?php echo $root_serwera; ?>js/jq311.js" ></script>
+    <script  src="<?php echo $root_serwera; ?>js/slider.js" ></script>
     <form action="<?php echo $adres_uri ; ?>" method="post">
         
         <input class="btn btn-primary btn-xs" type="submit" value="Pokaż dane z zakresu [dni] =>" >  &nbsp;&nbsp; 
         <input  id="ostatnie" type="text" name="ostatnie" />
         
-    <script language="javascript" >
+    <script  >
         $("#ostatnie").slider({min: 0, max: 2240, value: [<?php echo $zakresStart; ?>, <?php echo $zakresKoniec ; ?>]});
     </script>
 

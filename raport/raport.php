@@ -1,7 +1,7 @@
 	<?php
         
         include_once ("../stale.php");
-	include_once("phpReportGen.php");
+	require_once ("phpReportGen.php");
         
 	$prg = new phpReportGenerator();
 

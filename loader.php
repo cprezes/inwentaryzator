@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 include_once __DIR__ . '/stale.php';
 include_once __DIR__ . '/include/baza.php';
 include_once __DIR__ . '/include/session.php';
