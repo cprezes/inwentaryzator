@@ -1,18 +1,14 @@
 <?php
-include_once '../stale.php';
-include_once '../loader.php';
+require_once '../stale.php';
+require_once '../loader.php';
 $root_serwera = ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . "/" . explode("/", $_SERVER['PHP_SELF'])[1] . "/";
 
-//require_once "dbcontroller.php";
-//$db_handle = new DBController();
-//$sql = "SELECT * from ". TB_LIC;
-//$faq = $db_handle->runQuery($sql);
 include_once '../include/header.php';
 Session::set("EditDB", TB_LIC)
 ?>
 <html>
     <head>
-        <title>PHP MySQL Inline Editing using jQuery Ajax</title>
+        <title>Licencje</title>
         <style>
             body{width:98%;}
             .current-row{background-color:#B24926;color:#FFF;}
@@ -28,12 +24,13 @@ Session::set("EditDB", TB_LIC)
                 nanoajax.ajax({
                     url: "<?php echo $root_serwera; ?>licencje/saveedit.php",
                     method: 'POST',
-                    body: 'fildID=' + id + '&editval=' + element.innerHTML 
+                    body: 'fildID=' + id + '&editval=' + element.innerHTML
                 },
                         function (header, resp) {
                             element.innerHTML = resp.trim();
                         });
-            };
+            }
+            ;
         </script> 
     </script>
 
@@ -47,11 +44,13 @@ Session::set("EditDB", TB_LIC)
     $link = mysql_connect(DB_HOST, KONTO2, KONTO2_PASS);
     mysql_set_charset('utf8', $link);
     mysql_select_db(DB_NAME);
-    $res = mysql_query("SELECT * from " . Session::get("EditDB"));
+    $res = mysql_query("SELECT * from " . Session::get("EditDB"). " WHERE Ukryj = 0");
     $prg->mysql_resource = $res;
     require ('../include/header.php');
     echo '<link rel="stylesheet" href="../css/bootstrap.css" /> <link rel="stylesheet" href="../css/style.css" />';
-    echo "<a style=' position: absolute; top: 0px; right: 10px;' href=\"javascript:history.go(-1)\">Powrót >></a><br> ";
+    echo "<a style=' position: absolute; top: 0px; right: 10px;' href=\"$root_serwera\kompy.php\">Powrót >></a><br> ";
 
     $prg->generateTable();
-    ?>
+
+    echo '<a href="saveedit.php?nowy"> <INPUT TYPE="button" VALUE="Nowy Wiersz" style="float: right;"></a>';
+    

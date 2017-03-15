@@ -6,7 +6,7 @@ $adres_url = ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' :
 Session::set("AdresPowrotu", $adres_url);
 Session::set("AdresFiltru", $adres_tmp);
 
-echo "<div class=\"topright\"> <a href=\"raport/\">Raporty gotowe  </a> | <a href=\"db.php\"> zaawansowane w SQL</a> </div>";
+echo "<div class=\"topright\">  <a href=\"licencje/\">Licencje</a> | <a href=\"raport/\">Raporty gotowe  </a> | <a href=\"db.php\"> zaawansowane w SQL</a> </div>";
 @ Session::set("raporty_user", KONTO2);
 @ Session::set("raporty_pass", KONTO2_PASS);
 @ Session::set("raporty_host", DB_HOST);

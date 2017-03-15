@@ -1,16 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of showTable
- *
- * @author php
- */
 class tabGen {
     var $header;
     var $fields = array();
@@ -19,15 +8,9 @@ class tabGen {
     function generateTable() {
 
 
-        //echo "modified_width : ".$this->modified_width."<br>"; 
-
         if (!is_resource($this->mysql_resource))
             die("<br>Zapytanie nie jest poprawne");
 
-        /*
-         * Lets calculate how many fields are there in supplied resource
-         * and store their name in $this->fields[] array
-         */
 
         $field_count = mysql_num_fields($this->mysql_resource);
         $i = 0;
@@ -40,22 +23,15 @@ class tabGen {
         }
 
 
-        /*
-         * Now start table generation
-         * We must draw this table according to number of fields
-         */
+
 
         echo "<b><i>" . $this->header . "</i></b>";
         echo "<P></P>";
 
-        //Check If our table has to be surrounded by an additional table
-        //which increase style of this table
         echo '<div><table class="table table-bordered table-hover table-condensed" style="width: 100%;" >';
         echo "<thead style=\"  white-space: nowrap; \">";
         $header = array();
-        //Header Draw
         for ($i = 0; $i < $field_count; $i++) {
-            //Now Draw Headers
             echo "<th><center>" . $this->fields[$i] . "</center></th>";
             $header[] =  $this->fields[$i];
         }
@@ -67,8 +43,10 @@ class tabGen {
         while ($rows = mysql_fetch_row($this->mysql_resource)) {
             echo "<tr>";
             for ($i = 0; $i < $field_count; $i++) {
-                //Now Draw Data
-                echo "<td contenteditable=\"true\" onBlur=\"saveToDatabase(this,'$header[$i]*-*$rows[0]')\" >" . $rows[$i] . "</td>";
+                
+                echo "<td ";
+               if (!(($header[$i]=="Id") || ($header[$i]=="Timestamp"))) echo  "contenteditable=\"true\" onBlur=\"saveToDatabase(this,'$header[$i]*-*$rows[0]')\" ";
+                        echo ">" . $rows[$i] . "</td>";
             }
             echo "</tr>";
         }

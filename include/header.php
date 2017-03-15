@@ -10,9 +10,9 @@ $root_serwera = ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" href="<?php echo $root_serwera; ?>css/bootstrap.css" />
         <link rel="stylesheet" href="<?php echo $root_serwera; ?>css/style.css" />
-        <script language="javascript" src="<?php echo $root_serwera; ?>js/bootsrap.js" ></script>
-        <script language="javascript" src="<?php echo $root_serwera; ?>js/nanoajax.min.js"></script>  
-        <script language="javascript">
+        <script  src="<?php echo $root_serwera; ?>js/bootsrap.js" ></script>
+        <script  src="<?php echo $root_serwera; ?>js/nanoajax.min.js"></script>  
+        <script >
             function zmienText(elmnt, id) {
                 nanoajax.ajax({
                     url: "<?php echo $root_serwera; ?>include/user.php",
