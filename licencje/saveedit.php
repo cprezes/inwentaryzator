@@ -13,8 +13,6 @@ If ((isset($_REQUEST['fildID'])) and ( !(empty($_REQUEST['fildID'])))) {
     if ($column == "Id" or $column == "Timestamp")
         die();
 
-
-
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
         $ip = $_SERVER['HTTP_CLIENT_IP'];
     } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
