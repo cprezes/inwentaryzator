@@ -9,7 +9,7 @@ If ((isset($_REQUEST['fildID'])) and ( !(empty($_REQUEST['fildID'])))) {
     $filds = explode("*-*", $fildID);
     $column = $filds[0];
     $id = $filds[1];
-
+ $editval = trim($_REQUEST["editval"],"<br>"); 
     if ($column == "Id" or $column == "Timestamp")
         die();
 
@@ -40,13 +40,13 @@ If ((isset($_REQUEST['fildID'])) and ( !(empty($_REQUEST['fildID'])))) {
         'Rodzaj_Prg' => $Rodzaj_Prg,
         'from_id' => $id,
         'old_value' => $oldValue,
-        'nev_value' => $_REQUEST["editval"],
+        'nev_value' => $editval,
         'user' => $ip
     );
     $database->insert(Session::get("EditDB") . "_log", $user_change);
 
     //Save change
-    $update = array($column => $_REQUEST["editval"]);
+    $update = array($column => $editval);
     $update_where = array('Id' => $id);
     $database->update(Session::get("EditDB"), $update, $update_where, 1);
 

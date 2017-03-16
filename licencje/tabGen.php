@@ -37,16 +37,19 @@ class tabGen {
         }
 
         echo "</tr></thead><tbody>";
-
+        $idOverwrites=0;
 
         //Now fill the table with data
         while ($rows = mysql_fetch_row($this->mysql_resource)) {
+            $idOverwrites++;
             echo "<tr>";
             for ($i = 0; $i < $field_count; $i++) {
                 
                 echo "<td ";
                if (!(($header[$i]=="Id") || ($header[$i]=="Timestamp"))) echo  "contenteditable=\"true\" onBlur=\"saveToDatabase(this,'$header[$i]*-*$rows[0]')\" ";
-                        echo ">" . $rows[$i] . "</td>";
+                        echo ">" ;
+                     If(($header[$i]=="Id") )echo $idOverwrites  ; else echo   $rows[$i]; 
+                               echo "</td>";
             }
             echo "</tr>";
         }
