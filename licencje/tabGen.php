@@ -1,6 +1,7 @@
 <?php
 
 class tabGen {
+
     var $header;
     var $fields = array();
     var $mysql_resource;
@@ -22,40 +23,60 @@ class tabGen {
             $i++;
         }
 
-
-
-
-        echo "<b><i>" . $this->header . "</i></b>";
-        echo "<P></P>";
+//        echo "<b><i>" . $this->header . "</i></b>";
+//       echo "<P></P>";
 
         echo '<div><table class="table table-bordered table-hover table-condensed" style="width: 100%;" >';
         echo "<thead style=\"  white-space: nowrap; \">";
         $header = array();
         for ($i = 0; $i < $field_count; $i++) {
-            echo "<th><center>" . $this->fields[$i] . "</center></th>";
-            $header[] =  $this->fields[$i];
+            echo "<th><center>" . $this->fields[$i] ." ";
+
+
+            switch ($this->fields[$i]) {
+                case "Rodzaj_Prg":
+                    echo "<a href='../raport/raport.php?numer=20' target='_blank'>[S]</a>";
+                    break;
+                case "Zdajacy_login":
+                    echo "<a href='../raport/raport.php?numer=21' target='_blank'>[S]</a>";
+                    break;
+                case "Odbierajacy_login":
+                    echo "<a href='../raport/raport.php?numer=21' target='_blank'>[S]</a>";
+                    break;
+                case "Nazwa_komputera":
+                    echo "<a href='../raport/raport.php?numer=22' target='_blank'>[S]</a>";
+                    break;
+            }
+
+            echo "</center></th>";
+            $header[] = $this->fields[$i];
         }
 
         echo "</tr></thead><tbody>";
-        $idOverwrites=0;
+        $idOverwrites = 0;
 
         //Now fill the table with data
         while ($rows = mysql_fetch_row($this->mysql_resource)) {
             $idOverwrites++;
             echo "<tr>";
             for ($i = 0; $i < $field_count; $i++) {
-                
+
                 echo "<td ";
-               if (!(($header[$i]=="Id") || ($header[$i]=="Timestamp"))) echo  "contenteditable=\"true\" onBlur=\"saveToDatabase(this,'$header[$i]*-*$rows[0]')\" ";
-                        echo ">" ;
-                     If(($header[$i]=="Id") )echo $idOverwrites  ; else echo   $rows[$i]; 
-                               echo "</td>";
+                if (!(($header[$i] == "Id") || ($header[$i] == "Timestamp")))
+                    echo "contenteditable=\"true\" onBlur=\"saveToDatabase(this,'$header[$i]*-*$rows[0]')\" ";
+                echo ">";
+                If (($header[$i] == "Id"))
+                    echo $idOverwrites;
+                else
+                    echo $rows[$i];
+                echo "</td>";
             }
             echo "</tr>";
         }
         echo "</table>";
 
-     
-            echo "</td></tr></tbody></table></div>";
+
+        echo "</td></tr></tbody></table></div>";
     }
+
 }

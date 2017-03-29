@@ -10,7 +10,7 @@ Session::set("EditDB", TB_LIC)
     <head>
         <title>Licencje</title>
         <style>
-           
+
             .current-row{background-color:#B24926;color:#FFF;}
             .current-col{background-color:#1b1b1b;color:#FFF;}
             .tbl-qa{width: 100%;font-size:0.9em;background-color: #f5f5f5;}
@@ -44,11 +44,13 @@ Session::set("EditDB", TB_LIC)
     $link = mysql_connect(DB_HOST, KONTO2, KONTO2_PASS);
     mysql_set_charset('utf8', $link);
     mysql_select_db(DB_NAME);
-    $res = mysql_query("SELECT * from " . Session::get("EditDB"). " WHERE Ukryj = 0");
+    $res = mysql_query("SELECT * from " . Session::get("EditDB") . " WHERE Ukryj = 0");
     $prg->mysql_resource = $res;
-    require_once  ('../include/header.php');
+    require_once ('../include/header.php');
     echo '<link rel="stylesheet" href="../css/bootstrap.css" /> <link rel="stylesheet" href="../css/style.css" />';
-    echo "<a style=' position: absolute; top: 0px; right: 10px;' href='".$root_serwera ."kompy.php'>Powrót >></a><br> ";
+    echo "<a style=' position: absolute; top: 0px; right: 10px;' href='" . $root_serwera . "kompy.php'>Powrót >></a><br> ";
+    echo "<p><b>Przy wypełnianiu komórek staraj się używać ja najwięcej danych ze słownika szczególnie w kolumnach gdzie słownik taki jest dostępny. 
+Do słownika możesz dostać się za pomocą skrótu [S] w bardziej istotnych kolumnach.</b> </p>";
 
     $prg->generateTable();
 
