@@ -33,7 +33,6 @@ if (!(empty($_REQUEST['nazwa']))) {
     }
 
     $database = new DB();
-    $database = DB::getInstance();
 
     if ($wichDb == "monitor") {
         $insert = array(

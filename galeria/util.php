@@ -4,7 +4,7 @@ require_once 'staticval.php';
  If ((isset($_REQUEST['nr'])) and ( !(empty($_REQUEST['nr'])))) {
         $i = $_REQUEST["nr"];
     }else die();
-if( empty( Session::get("tablicaGlosowania"))) die(); else $tablicaGlosowania= Session::get("tablicaGlosowania"); 
+if( empty( Session::get("tablicaGlosowania"))){header( "refresh:3;url=glosuj.php" );  die();} else $tablicaGlosowania= Session::get("tablicaGlosowania"); 
 
 If ((isset($_REQUEST['show'])) and ( !(empty($_REQUEST['show'])))) {
  $database = new DB($galeriaDB_HOST, $galeriaDB_USER, $galeriaDB_PASS, $galeriaDB_NAME);

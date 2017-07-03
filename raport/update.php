@@ -10,9 +10,7 @@ If ((isset($_REQUEST['c1'])) and ( !(empty($_REQUEST['c1']))))
 If ((isset($_REQUEST["c27"])) and ( !(empty($_REQUEST["c27"]))))
     $opis = $_REQUEST["c27"];
 If ((isset($_REQUEST["c3"])) and ( !(empty($_REQUEST["c3"]))))
-{ $query = $_REQUEST["c3"];
- $query= str_replace( "'", '"',$query);       
-}
+    $query = $_REQUEST["c3"];
 If ((isset($_REQUEST["usun"])) and ( !(empty($_REQUEST["usun"]))))
     $usun = "0"; else $usun = "1"; //tu jest odwrotna logika 
 If ((isset($_REQUEST['id'])) and ( !(empty($_REQUEST['id']))))
@@ -32,7 +30,7 @@ if ($id < 0) {
         'widoczny' => $usun
     );
 
-// var_dump($insert);
+    var_dump($insert);
 
 $database->insert( 'zapytania', $insert );
 } else {
