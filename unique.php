@@ -38,7 +38,7 @@ echo "Interpretacja: Kolumna o nazwie <mark>$unike</mark> jest główną kolumna
         <input  id="ostatnie" type="text" name="ostatnie" />
         
     <script  >
-        $("#ostatnie").slider({min: 0, max: 2240, value: [<?php echo $zakresStart; ?>, <?php echo $zakresKoniec ; ?>]});
+        $("#ostatnie").slider({min: 0, max: 1800, value: [<?php echo $zakresStart; ?>, <?php echo $zakresKoniec ; ?>]});
     </script>
 
     

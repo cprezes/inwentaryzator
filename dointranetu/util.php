@@ -10,7 +10,7 @@ If ((isset($_REQUEST['show'])) and ( !(empty($_REQUEST['show'])))) {
  $database = new DB($galeriaDB_HOST, $galeriaDB_USER, $galeriaDB_PASS, $galeriaDB_NAME);
   $query = "SELECT `file` 
                                 FROM `$galeriaTabela` 
-                                WHERE  `form_name` LIKE '$sFormName' and  
+                                WHERE  `form_name` LIKE '$sGaleriaFormName' and  
                                 `field_value` = '" . $tablicaGlosowania[$i]["field_value"] . "' and  
                                 `submit_time` = '" . $tablicaGlosowania[$i]["submit_time"] . "' and  
                                 `field_name` = '" . $tablicaGlosowania[$i]["field_name"] . "'";
@@ -20,6 +20,14 @@ echo '</br><div align="center"><img id="myImg" class="thumbnail" src="data:image
 
 If ((isset($_REQUEST['glosuj'])) and ( !(empty($_REQUEST['glosuj'])))) {
 
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    
     
   $database = new DB();
         $insert = array(
@@ -27,7 +35,8 @@ If ((isset($_REQUEST['glosuj'])) and ( !(empty($_REQUEST['glosuj'])))) {
             'form_name' => $tablicaGlosowania[$i]["form_name"],
             'field_name' => $tablicaGlosowania[$i]["field_name"],
             'field_value' => $tablicaGlosowania[$i]["field_value"],
-            'rating'=>1    
+            'rating'=>1,
+            'ip'=>$ip
        );
 
      $database->insert('galeria_glosowanie', $insert);

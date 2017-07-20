@@ -32,7 +32,7 @@ if (!empty($_REQUEST['nazwa'])) {
         die();
 $query = "SELECT `file` 
 FROM `wp_cf7dbplugin_submits` 
-WHERE `form_name` = '$sFormName'  and  `field_value` = '$nazwa' and  `submit_time` = '$s_time' and  `field_name` = '$f_name'    ";
+WHERE `form_name` = '$sGaleriaFormName'  and  `field_value` = '$nazwa' and  `submit_time` = '$s_time' and  `field_name` = '$f_name'    ";
     $results = $database->get_results($query);
 
     header("Content-Disposition: attachment; filename=$nazwa");
@@ -43,7 +43,7 @@ WHERE `form_name` = '$sFormName'  and  `field_value` = '$nazwa' and  `submit_tim
 
 
 //zlicz ile jest akcepacji regulaminu 
-$query = "SELECT COUNT(*) as ile FROM `wp_cf7dbplugin_submits` WHERE `form_name` = '$sFormName' and `field_value` = 1 and `field_name` = 'akceptacja_regulaminu'";
+$query = "SELECT COUNT(*) as ile FROM `wp_cf7dbplugin_submits` WHERE `form_name` = '$sGaleriaFormName' and `field_value` = 1 and `field_name` = 'akceptacja_regulaminu'";
 
 $results = $database->get_results($query);
 $wierszy = floatval($results[0]['ile']);
@@ -54,8 +54,8 @@ include '../paginacja.php';
   if (!($przegl)) echo " <a href='$adres_tmp"."strona=$strona&przegl=1' ><button>Przełącz w tryb przeglądania</button></a>";
   else 
    echo " <a href='$adres_tmp"."strona=$strona' ><button>Przełącz w tryb pobierania</button></a>"  ;
-
-?></p> 
+echo "</p>";
+?> 
 
 <style>
 
@@ -108,7 +108,7 @@ $query = "SELECT `submit_time` AS 'Submitted',
  max(if(`field_name`='Submitted From', `field_value`, null )) AS 'Submitted From',
  GROUP_CONCAT(if(`file` is null or length(`file`) = 0, null, `field_name`)) AS 'fields_with_file'
 FROM `wp_cf7dbplugin_submits` 
-WHERE `form_name` = '$sFormName'  
+WHERE `form_name` = '$sGaleriaFormName'  
 GROUP BY `submit_time` 
 ORDER BY `submit_time` DESC
 LIMIT " . ($strona - 1) * 10 . ",100 ";
