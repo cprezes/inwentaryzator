@@ -1,11 +1,11 @@
 <?php
 require_once 'staticval.php';
 $zdjNaStronie = 6;
-$database = new DB($galeriaDB_HOST, $galeriaDB_USER, $galeriaDB_PASS, $galeriaDB_NAME);
+$database = new DB();
 if (empty(Session::get("lista"))) { //ładuj do sesji tablice wszystkich zdjeć
     $query = "SELECT submit_time,form_name,field_name,field_value 
-         FROM `$galeriaTabela` 
-         where `form_name` LIKE '$sGaleriaFormName' and `field_name` LIKE \"%zdj%\" and LENGTH(`field_value`)>0";
+         FROM `$glegiaTabelaPliki` 
+         where `form_name` LIKE '$sGaleriaFormName'";
     $results = $database->get_results($query);
     Session::set("zdjId", $results);
     $numbers = range(1, count($results));
@@ -17,19 +17,22 @@ if (empty(Session::get("lista"))) { //ładuj do sesji tablice wszystkich zdjeć
 }
 
 
+//sprawddz czy strona nie sostała odświerzona zamiast zagłosować --- zmiana koncepcji 
 
-//sprawddz czy strona nie sostała odświerzona zamiast zaglosować 
-
-$pageWasRefreshed = isset($_SERVER['HTTP_CACHE_CONTROL']) && $_SERVER['HTTP_CACHE_CONTROL'] === 'max-age=0';
+//$pageWasRefreshed = isset($_SERVER['HTTP_CACHE_CONTROL']) && $_SERVER['HTTP_CACHE_CONTROL'] === 'max-age=0';
 
 //if ($pageWasRefreshed) {
 //    $zaglosowano = FALSE;
 // else {
+
+
     if (count($numbers) < $zdjNaStronie) {
         header('Location: ' . "stats.php");
         die;
     }
     $zaglosowano = TRUE;
+    
+    
 //}
 echo '<div class="container"> <div class="row ">';
 if ($zaglosowano == FALSE) { // nie zaglosowano 
@@ -42,16 +45,18 @@ for ($i = 1; $i <= $zdjNaStronie; $i++) {
         array_shift($numbers);
     }
 
-    $query = "SELECT `file`  FROM `$galeriaTabela` 
+    $query = "SELECT `file`  FROM `$glegiaTabelaPliki` 
                                 WHERE  `form_name` LIKE '$sGaleriaFormName' and  
                                 `field_value` = '" . $tablicaGlosowania[$i]["field_value"] . "' and  
                                 `submit_time` = '" . $tablicaGlosowania[$i]["submit_time"] . "' and  
                                 `field_name` = '" . $tablicaGlosowania[$i]["field_name"] . "'";
     $pics = $database->get_results($query);
+    
+    $file = file_get_contents("img/" . $pics[0]["file"], true);
     echo '<div class="col-md-4 nopadding"> <div class="row top-buffer">';
     echo'<center><a href="util.php?show=1&nr=' . $i . '" class="image-trigger" target="_blank"> '
     . '<img id="myImg" class="thumbnail" src="data:image/jpeg;base64,'
-    . base64_encode($pics [0] ['file']) .
+    . base64_encode($file) .
     '" width="300" height="auto" style="cursor:zoom-in;" /><a></center>';
 
     echo '<div><center><a href="util.php?glosuj=1&nr=' . $i . '"><button  type="button" class="btn btn-secondary btn-lg" > Głosuję na powyższe zdjecie </button></a></center></div></div></div>';
@@ -64,6 +69,8 @@ Session::set("tablicaGlosowania", $tablicaGlosowania);
 if ($zaglosowano) {// zaglosowano 
     Session::set("lista", $numbers);
 }
+
+echo '<div style="display:none">Zapytanie zajęło  ' . convert(memory_get_usage(true)) . "</div>"; // 123 kb
 ?>
 
 </div></div>

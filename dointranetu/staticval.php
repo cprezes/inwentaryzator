@@ -9,6 +9,7 @@ $galeriaDB_USER= "galeria_view";
 $galeriaDB_PASS= "qhNmxsszmT9gcxnu";
 $galeriaDB_NAME ="intranet";
 $galeriaTabela="wp_cf7dbplugin_submits";
+$glegiaTabelaPliki="galeria_pliki";
 $sGaleriaFormName="Konkurs_fotograficzny"; 
 $sOgloszeneniaFormName="Tablica ogloszen";
 ?>
@@ -48,4 +49,10 @@ function prependHTTP( $m )
 function formatUrlsInText($text) 
 { 
    return preg_replace_callback('#(?i)(http|https)?(://)?(([-\w^@]+\.)+(net|org|edu|gov|me|com+)(?:/[^,.\s]*|))#','prependHTTP',$text);
+}
+
+
+function convert($size) {
+    $unit = array('b', 'kb', 'mb', 'gb', 'tb', 'pb');
+    return @round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . ' ' . $unit[$i];
 }

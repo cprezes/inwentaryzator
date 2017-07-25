@@ -8,7 +8,6 @@ if ((isset($_GET["strona"]) and ( !(empty($_GET["strona"]))))) {
 }
 
 
-$database = new DB($galeriaDB_HOST, $galeriaDB_USER, $galeriaDB_PASS, $galeriaDB_NAME);
 
 
 If ((isset($_REQUEST['przegl'])) and ( !(empty($_REQUEST['przegl']))))
@@ -16,6 +15,8 @@ If ((isset($_REQUEST['przegl'])) and ( !(empty($_REQUEST['przegl']))))
 else
     $przegl = 0;
 
+$database = new DB($galeriaDB_HOST, $galeriaDB_USER, $galeriaDB_PASS, $galeriaDB_NAME);
+$komputeryDB = new DB();
 
 if (!empty($_REQUEST['nazwa'])) {
     If ((isset($_REQUEST['nazwa'])) and ( !(empty($_REQUEST['nazwa']))))
@@ -114,6 +115,7 @@ ORDER BY `submit_time` DESC
 LIMIT " . ($strona - 1) * 10 . ",100 ";
 $results = $database->get_results($query);
 $onKlikFunction = "";
+        
 if ($przegl)
     $onKlikFunction = 'onclick="myFunction(this)"';
 echo "<div>    <table class=\"table table-bordered table-hover table-condensed \" ><tbody>";
@@ -127,9 +129,14 @@ foreach ($results as $row) {
         if (!($przegl))
             echo '<a  href="' . $adres_tmp . "nazwa=" . $row['zdj' . $i] . "&f_name=zdj" . $i . "&s_time=" . $row['Submitted'] . '">';
         echo ' <img id="img"  src="data:image/jpeg;base64,' . base64_encode($row['ImgZdj' . $i]) . '" ' . $onKlikFunction . ' onerror="this.src=\'bigRedX.png\';"  />';
-        if (!($przegl))
-            echo '</a>';
-        echo "</div>";
+        if (!($przegl))echo '</a>';
+         $iExistValue= $komputeryDB->num_rows( "SELECT submit_time FROM galeria_pliki WHERE submit_time = ". $row['Submitted']." and field_name = 'zdj".$i."'"  );
+        if( $iExistValue ==0){
+            echo "<a href ='galeria_chose.php?submit_time=". $row['Submitted']."&field_name=zdj".$i."'> <button> Dodaj do galerii </button></a> ";
+        }else{
+          echo  "<button> W galerii </button> ";
+        }  
+        echo "  </div></br>";
         }
         
     }
@@ -137,9 +144,6 @@ foreach ($results as $row) {
 }
 echo " </tbody></table></div>";
 
-function convert($size) {
-    $unit = array('b', 'kb', 'mb', 'gb', 'tb', 'pb');
-    return @round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . ' ' . $unit[$i];
-}
+
 
 echo "Zapytanie zajęło  " . convert(memory_get_usage(true)); // 123 kb
