@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Czas generowania: 18 Maj 2017, 10:45
--- Wersja serwera: 10.1.14-MariaDB
--- Wersja PHP: 5.6.30
+-- Generation Time: Jul 26, 2017 at 08:51 AM
+-- Server version: 10.1.14-MariaDB
+-- PHP Version: 5.6.31
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Baza danych: `komputery`
+-- Database: `komputery`
 --
 CREATE DATABASE IF NOT EXISTS `komputery` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `komputery`;
@@ -25,7 +25,43 @@ USE `komputery`;
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `inne`
+-- Table structure for table `galeria_glosowanie`
+--
+
+DROP TABLE IF EXISTS `galeria_glosowanie`;
+CREATE TABLE IF NOT EXISTS `galeria_glosowanie` (
+  `id` int(11) NOT NULL,
+  `submit_time` decimal(16,4) NOT NULL,
+  `form_name` varchar(127) NOT NULL,
+  `field_value` longtext NOT NULL,
+  `field_name` varchar(127) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `rating` int(11) NOT NULL,
+  `ip` varchar(15) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `galeria_pliki`
+--
+
+DROP TABLE IF EXISTS `galeria_pliki`;
+CREATE TABLE IF NOT EXISTS `galeria_pliki` (
+  `submit_time` decimal(16,4) NOT NULL,
+  `form_name` varchar(127) CHARACTER SET utf8 DEFAULT NULL,
+  `field_name` varchar(127) CHARACTER SET utf8 DEFAULT NULL,
+  `field_value` longtext CHARACTER SET utf8,
+  `field_order` int(11) DEFAULT NULL,
+  `file` text,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `ip` varchar(15) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inne`
 --
 
 DROP TABLE IF EXISTS `inne`;
@@ -38,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `inne` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Wyzwalacze `inne`
+-- Triggers `inne`
 --
 DROP TRIGGER IF EXISTS `wywal_starsze_jak_rok_inne`;
 DELIMITER $$
@@ -50,7 +86,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `instalacje`
+-- Table structure for table `instalacje`
 --
 
 DROP TABLE IF EXISTS `instalacje`;
@@ -70,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `instalacje` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `komputery`
+-- Table structure for table `komputery`
 --
 
 DROP TABLE IF EXISTS `komputery`;
@@ -91,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `komputery` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
--- Wyzwalacze `komputery`
+-- Triggers `komputery`
 --
 DROP TRIGGER IF EXISTS `wywal_starsze_jak_rok`;
 DELIMITER $$
@@ -103,7 +139,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `licencje`
+-- Table structure for table `licencje`
 --
 
 DROP TABLE IF EXISTS `licencje`;
@@ -128,7 +164,7 @@ CREATE TABLE IF NOT EXISTS `licencje` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `licencje_log`
+-- Table structure for table `licencje_log`
 --
 
 DROP TABLE IF EXISTS `licencje_log`;
@@ -146,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `licencje_log` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `users`
+-- Table structure for table `users`
 --
 
 DROP TABLE IF EXISTS `users`;
@@ -171,7 +207,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `zapytania`
+-- Table structure for table `zapytania`
 --
 
 DROP TABLE IF EXISTS `zapytania`;
@@ -185,8 +221,22 @@ CREATE TABLE IF NOT EXISTS `zapytania` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
--- Indeksy dla zrzutów tabel
+-- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `galeria_glosowanie`
+--
+ALTER TABLE `galeria_glosowanie`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `galeria_pliki`
+--
+ALTER TABLE `galeria_pliki`
+  ADD KEY `submit_time_idx` (`submit_time`),
+  ADD KEY `form_name_idx` (`form_name`),
+  ADD KEY `field_name_idx` (`field_name`);
 
 --
 -- Indexes for table `inne`
@@ -235,40 +285,59 @@ ALTER TABLE `zapytania`
 --
 
 --
--- AUTO_INCREMENT dla tabeli `inne`
+-- AUTO_INCREMENT for table `galeria_glosowanie`
+--
+ALTER TABLE `galeria_glosowanie`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `inne`
 --
 ALTER TABLE `inne`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT dla tabeli `instalacje`
+-- AUTO_INCREMENT for table `instalacje`
 --
 ALTER TABLE `instalacje`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT dla tabeli `komputery`
+-- AUTO_INCREMENT for table `komputery`
 --
 ALTER TABLE `komputery`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT dla tabeli `licencje`
+-- AUTO_INCREMENT for table `licencje`
 --
 ALTER TABLE `licencje`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT dla tabeli `licencje_log`
+-- AUTO_INCREMENT for table `licencje_log`
 --
 ALTER TABLE `licencje_log`
   MODIFY `id` int(99) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT dla tabeli `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT dla tabeli `zapytania`
+-- AUTO_INCREMENT for table `zapytania`
 --
 ALTER TABLE `zapytania`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+DELIMITER $$
+--
+-- Events
+--
+DROP EVENT `Czysc stare wpisy w tabelach`$$
+CREATE DEFINER=`root`@`localhost` EVENT `Czysc stare wpisy w tabelach` ON SCHEDULE EVERY 1 WEEK STARTS '2017-07-24 07:00:00' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+	DELETE FROM `komputery` WHERE `data` < DATE_ADD(now(), INTERVAL -5 YEAR);
+	DELETE FROM `inne` WHERE `data` < DATE_ADD(now(), INTERVAL -5 YEAR);
+	DELETE FROM `instalacje` WHERE `data` < DATE_ADD(now(), INTERVAL -1 YEAR);
+	DELETE FROM `licencje_log` WHERE `TimeStamp` < DATE_ADD(now(), INTERVAL -1 YEAR);
+	END$$
+
+DELIMITER ;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
