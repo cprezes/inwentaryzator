@@ -25,14 +25,15 @@ if (empty(Session::get("lista"))) { //ładuj do sesji tablice wszystkich zdjeć
 
 
 if (count($numbers) < $zdjNaStronie) {
-    header('Location: ' . "stats.php");
+    Session::destroy();
+    header('Location: ' . $adres_tmp);
     die;
 }
 $zaglosowano = TRUE;
 
 
 //}
-echo '<div class="container"> <div class="row ">';
+echo '<div class="container" > <div class="row ">';
 if ($zaglosowano == FALSE) { // nie zaglosowano 
     $tablicaGlosowania = Session::get("tablicaGlosowania");
 }
@@ -55,9 +56,8 @@ for ($i = 1; $i <= $zdjNaStronie; $i++) {
     echo'<center><a href="util.php?show=1&nr=' . $i . '" class="image-trigger" target="_blank"> '
     . '<img id="myImg" class="thumbnail" src="data:image/jpeg;base64,'
     . base64_encode($file) .
-    '" width="300" height="auto" style="cursor:zoom-in;" /><a></center>';
+    '" width="300" height="auto" style="cursor:zoom-in;" /><a></center></div></div>';
 
-    echo '<div><center><a href="util.php?glosuj=1&nr=' . $i . '"><button  type="button" class="btn btn-secondary btn-lg" > Głosuję na powyższe zdjecie </button></a></center></div></div></div>';
     if (($i % 3) == 0)
         echo '</div>';
     if (count($numbers) < 1)
@@ -76,7 +76,7 @@ echo '<div style="display:none">Zapytanie zajęło  ' . convert(memory_get_usage
 <div class="row"><div class="container">     
         <div class="span12"> 
 
-            <p class="text-center" ><br/><br/><a href="glosuj.php"><button type="button" class="btn btn-danger"><b>Następny zestaw</b></button></a></p>
+            <p class="text-center" ><br/><br/><a href="<?php echo $adres_tmp ?>"><button type="button" class="btn btn-danger"><b>Następne</b></button></a></p>
 
         </div> 
     </div></div></div>
@@ -107,6 +107,7 @@ echo '<div style="display:none">Zapytanie zajęło  ' . convert(memory_get_usage
     }
     .top-buffer { margin-top:20px; }
 
+
     body {
         margin: 1%;    
         background-image: url("m_team.png");
@@ -115,4 +116,5 @@ echo '<div style="display:none">Zapytanie zajęło  ' . convert(memory_get_usage
         margin-right: 200px;
         background-attachment: fixed;
     }
+
 </style>
