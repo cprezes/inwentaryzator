@@ -19,8 +19,9 @@ If ((isset($_REQUEST['show'])) and ( !(empty($_REQUEST['show'])))) {
                                 `submit_time` = '" . $tablicaGlosowania[$i]["submit_time"] . "' and  
                                 `field_name` = '" . $tablicaGlosowania[$i]["field_name"] . "'";
     $pics = $database->get_results($query);
-     $file = file_get_contents("img/" . $pics[0]["file"], true);
+     $file = @file_get_contents("img/" . $pics[0]["file"], true);
     echo '</br><div align="center"><img id="myImg" class="thumbnail" src="data:image/jpeg;base64,' . base64_encode($file) . '" width="1100" height="auto"   /></div>';
+
 }
 
 If ((isset($_REQUEST['glosuj'])) and ( !(empty($_REQUEST['glosuj'])))) {
@@ -49,7 +50,9 @@ If ((isset($_REQUEST['glosuj'])) and ( !(empty($_REQUEST['glosuj'])))) {
     header("refresh:3;url=glosuj.php");
     ?>
 
-    <a href="glosuj.php"<button type="button" class="btn btn-warning btn-lg centered" >Twój głos,</br> jest właśnie zapisny<br> w tablicy wyników. </br></br> Trwa losowanie kolejnego zestawu zdjęć.</button>
+    <a href="glosuj.php"<button type="button" class="btn btn-warning btn-lg centered" >Twój głos,</br> jest właśnie wpisywany<br> do tablicy wyników. </br></br> Trwa losowanie kolejnego zestawu zdjęć.</button>
     <?php
     Session::set("tablicaGlosowania", NULL);
 }
+?>
+    <link rel="stylesheet" type="text/css" href="<?php echo $root_serwera; ?>css/dointranetu/galerie.css">

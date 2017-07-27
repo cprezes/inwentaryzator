@@ -80,41 +80,4 @@ echo '<div style="display:none">Zapytanie zajęło  ' . convert(memory_get_usage
 
         </div> 
     </div></div></div>
-<style>
-    #myImg {
-        border-radius: 5px;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-
-    #myImg:hover {opacity: 0.6;}
-
-    .nopadding {
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-
-
-    .centered {
-        text-align: center;
-        font-size: 0;
-    }
-    .centered > div {
-        float: none;
-        display: inline-block;
-        text-align: left;
-        font-size: 13px;
-    }
-    .top-buffer { margin-top:20px; }
-
-
-    body {
-        margin: 1%;    
-        background-image: url("m_team.png");
-        background-repeat: no-repeat;
-        background-position: right top;
-        margin-right: 200px;
-        background-attachment: fixed;
-    }
-
-</style>
+    <link rel="stylesheet" type="text/css" href="<?php echo $root_serwera; ?>css/dointranetu/galerie.css">
