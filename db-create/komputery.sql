@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 26, 2017 at 08:51 AM
+-- Generation Time: Aug 07, 2017 at 02:57 PM
 -- Server version: 10.1.14-MariaDB
 -- PHP Version: 5.6.31
 
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `komputery`
 --
-CREATE DATABASE IF NOT EXISTS `komputery` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `komputery`;
 
 -- --------------------------------------------------------
 
@@ -28,7 +26,6 @@ USE `komputery`;
 -- Table structure for table `galeria_glosowanie`
 --
 
-DROP TABLE IF EXISTS `galeria_glosowanie`;
 CREATE TABLE IF NOT EXISTS `galeria_glosowanie` (
   `id` int(11) NOT NULL,
   `submit_time` decimal(16,4) NOT NULL,
@@ -46,7 +43,6 @@ CREATE TABLE IF NOT EXISTS `galeria_glosowanie` (
 -- Table structure for table `galeria_pliki`
 --
 
-DROP TABLE IF EXISTS `galeria_pliki`;
 CREATE TABLE IF NOT EXISTS `galeria_pliki` (
   `submit_time` decimal(16,4) NOT NULL,
   `form_name` varchar(127) CHARACTER SET utf8 DEFAULT NULL,
@@ -64,7 +60,6 @@ CREATE TABLE IF NOT EXISTS `galeria_pliki` (
 -- Table structure for table `inne`
 --
 
-DROP TABLE IF EXISTS `inne`;
 CREATE TABLE IF NOT EXISTS `inne` (
   `id` int(11) NOT NULL,
   `nazwa` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
@@ -76,7 +71,6 @@ CREATE TABLE IF NOT EXISTS `inne` (
 --
 -- Triggers `inne`
 --
-DROP TRIGGER IF EXISTS `wywal_starsze_jak_rok_inne`;
 DELIMITER $$
 CREATE TRIGGER `wywal_starsze_jak_rok_inne` AFTER INSERT ON `inne`
  FOR EACH ROW DELETE FROM `inne` WHERE `data` <  now()-50000000000  ORDER BY `data` ASC LIMIT 10
@@ -89,7 +83,6 @@ DELIMITER ;
 -- Table structure for table `instalacje`
 --
 
-DROP TABLE IF EXISTS `instalacje`;
 CREATE TABLE IF NOT EXISTS `instalacje` (
   `id` int(11) NOT NULL,
   `nazwa` varchar(127) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
@@ -109,7 +102,6 @@ CREATE TABLE IF NOT EXISTS `instalacje` (
 -- Table structure for table `komputery`
 --
 
-DROP TABLE IF EXISTS `komputery`;
 CREATE TABLE IF NOT EXISTS `komputery` (
   `id` int(11) NOT NULL,
   `nazwa` varchar(80) COLLATE utf8_bin NOT NULL COMMENT 'Numer inwentarzowy',
@@ -129,7 +121,6 @@ CREATE TABLE IF NOT EXISTS `komputery` (
 --
 -- Triggers `komputery`
 --
-DROP TRIGGER IF EXISTS `wywal_starsze_jak_rok`;
 DELIMITER $$
 CREATE TRIGGER `wywal_starsze_jak_rok` AFTER INSERT ON `komputery`
  FOR EACH ROW DELETE FROM `komputery` WHERE `data` < now()-50000000000 ORDER BY `data` ASC LIMIT 10
@@ -142,7 +133,6 @@ DELIMITER ;
 -- Table structure for table `licencje`
 --
 
-DROP TABLE IF EXISTS `licencje`;
 CREATE TABLE IF NOT EXISTS `licencje` (
   `Id` int(11) NOT NULL,
   `Nr_OT` text,
@@ -167,7 +157,6 @@ CREATE TABLE IF NOT EXISTS `licencje` (
 -- Table structure for table `licencje_log`
 --
 
-DROP TABLE IF EXISTS `licencje_log`;
 CREATE TABLE IF NOT EXISTS `licencje_log` (
   `id` int(99) NOT NULL,
   `Rodzaj_Prg` text CHARACTER SET latin1,
@@ -182,10 +171,21 @@ CREATE TABLE IF NOT EXISTS `licencje_log` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `ogloszenia_usun`
+--
+
+CREATE TABLE IF NOT EXISTS `ogloszenia_usun` (
+  `data` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `email` varchar(250) COLLATE utf8_bin NOT NULL,
+  `numer` bigint(19) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL,
   `login` text COLLATE utf8_polish_ci,
@@ -210,7 +210,6 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Table structure for table `zapytania`
 --
 
-DROP TABLE IF EXISTS `zapytania`;
 CREATE TABLE IF NOT EXISTS `zapytania` (
   `id` int(11) NOT NULL,
   `user` varchar(128) COLLATE utf8_bin DEFAULT NULL,
@@ -328,13 +327,15 @@ DELIMITER $$
 --
 -- Events
 --
-DROP EVENT `Czysc stare wpisy w tabelach`$$
 CREATE DEFINER=`root`@`localhost` EVENT `Czysc stare wpisy w tabelach` ON SCHEDULE EVERY 1 WEEK STARTS '2017-07-24 07:00:00' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
 	DELETE FROM `komputery` WHERE `data` < DATE_ADD(now(), INTERVAL -5 YEAR);
 	DELETE FROM `inne` WHERE `data` < DATE_ADD(now(), INTERVAL -5 YEAR);
 	DELETE FROM `instalacje` WHERE `data` < DATE_ADD(now(), INTERVAL -1 YEAR);
 	DELETE FROM `licencje_log` WHERE `TimeStamp` < DATE_ADD(now(), INTERVAL -1 YEAR);
 	END$$
+
+CREATE DEFINER=`root`@`localhost` EVENT `Czysc_oglosenia_usun` ON SCHEDULE EVERY 1 WEEK STARTS '2017-08-07 07:00:00' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM `ogloszenia_usun` 
+     WHERE  `data`  <  DATE_ADD(now(), INTERVAL -60 DAY)$$
 
 DELIMITER ;
 
