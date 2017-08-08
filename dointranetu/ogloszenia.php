@@ -5,7 +5,7 @@ $oDbUsun = new DB();
 $sQuery = "SELECT email,numer FROM ogloszenia_usun";
 $aNiePokazuj = $oDbUsun->get_results($sQuery);
 $database = new DB($galeriaDB_HOST, $galeriaDB_USER, $galeriaDB_PASS, $galeriaDB_NAME);
-
+//koniec prowizorki 
 $query = "SELECT `submit_time` AS 'Submitted',
  max(if(`field_name`='temat', `field_value`, null )) AS 'temat',
  max(if(`field_name`='contact', `field_value`, null )) AS 'contact',
