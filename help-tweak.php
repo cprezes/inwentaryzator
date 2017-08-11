@@ -1,61 +1,83 @@
 <?php
-echo genToken();
-echo "<br>";
 
-function  genToken(){
-$tmp = number_format(floatval(date("Ymd")) * 676454534, 0, ",", "");
-$tmp2 = substr($tmp, 10);
-return base64_encode($tmp2);
+require_once 'stale.php';
+require_once 'include/baza.php';
+
+
+$aGenToken = array();
+for ($i = 0; $i < 30; $i++) {
+    $aGenToken[] = genToken($i);
+}
+
+
+If ((isset($_REQUEST['zapis'])) and ( !(empty($_REQUEST['zapis']))) and ( $_REQUEST["zapis"] == "tak")) {
+
+    $oBaza = new DB();
+
+    If ((isset($_REQUEST['token'])) and ( !(empty($_REQUEST['token'])))) {
+        $token = $_REQUEST["token"];
+    }
+    If ((isset($_REQUEST['hash'])) and ( !(empty($_REQUEST['hash'])))) {
+        $hash = $_REQUEST["hash"];
+    }
+    If ((isset($_REQUEST['path'])) and ( !(empty($_REQUEST['path'])))) {
+        $path = $_REQUEST["path"];
+    }
+    If ((isset($_REQUEST['userdata'])) and ( !(empty($_REQUEST['userdata'])))) {
+        $userData = $_REQUEST["userdata"];
+    }
+    If ((isset($_REQUEST['dni'])) and ( !(empty($_REQUEST['dni'])))) {
+        $dni = $_REQUEST["dni"];
+    }
+    $variables = [
+        "token" => $token,
+        "hash" => $hash,
+        "path" => $path,
+        "user_data" => $userData,
+        "dni" => $dni
+    ];
+    $oBaza->insert("instalator_dane", $variables);
 }
 
 
 
-$pass="CryptPassword";
-$mystring="this is the string I am encrypting";
-
-$tekst=  rc4Encrypt($pass,$mystring);
-echo $tekst .  "<br>";
-$tekst = rc4Decrypt($key,$tekstm);
-echo $tekst .  "<br>";
-        
 
 
 
 
-function rc4Encrypt($key, $str) {
-$s = array();
-	for ($i = 0; $i < 256; $i++) {
-		$s[$i] = $i;
-	}
-	$j = 0;
-	for ($i = 0; $i < 256; $i++) {
-		$j = ($j + $s[$i] + ord($key[$i % strlen($key)])) % 256;
-		$x = $s[$i];
-		$s[$i] = $s[$j];
-		$s[$j] = $x;
-	}
-	$i = 0;
-	$j = 0;
-	$res = '';
-	for ($y = 0; $y < strlen($str); $y++) {
-		$i = ($i + 1) % 256;
-		$j = ($j + $s[$i]) % 256;
-		$x = $s[$i];
-		$s[$i] = $s[$j];
-		$s[$j] = $x;
-		$res .= $str[$y] ^ chr($s[($s[$i] + $s[$j]) % 256]);
-	}
-	return $res;
+If ((isset($_REQUEST['gen_token'])) and ( !(empty($_REQUEST['gen_token']))) and ( $_REQUEST["gen_token"] == "tak")) {
+    echo genToken();
 }
 
-/**
- * Decrypt given cipher text using the key with RC4 algorithm.
- * All parameters and return value are in binary format.
- *
- * @param string key - secret key for decryption
- * @param string ct - cipher text to be decrypted
- * @return string
-*/
-function rc4Decrypt($key, $ct) {
-	return rc4Encrypt($key, $ct);
+
+
+foreach ($aGenToken as $row) {
+    If ((isset($_REQUEST[$row])) and ( !(empty($_REQUEST[$row])))) {
+        If ((isset($_REQUEST["id"])) and ( !(empty($_REQUEST["id"])))) {
+            sendData($_REQUEST[$row], $row, $_REQUEST["id"]);
+            break;
+        }
+    }
+}
+
+function sendData($sHash, $sToken, $kolumna = 0) {
+    $kolumny = [ "token", "hash", "path", "user_data ", "dni", "timestamp"];
+    if (count($kolumny)>$kolumna and 0 < intval($kolumna )){
+    $oBaza = new DB();
+    $sql = "SELECT $kolumny[$kolumna] FROM instalator_dane WHERE token='$sToken' and hash='$sHash' LIMIT 1";
+    $aResults = $oBaza->get_row($sql);
+    echo ($aResults[0]);
+    }  else {
+      echo base64_encode( rand(6546823546, 3456846563213548));    
+    }
+    
+}
+
+function genToken($interval = 0) {
+    $date = new DateTime(date('Y-m-d'));
+    $date->sub(new DateInterval('P' . $interval . 'D'));
+    $tmp = number_format(floatval($date->format("Ymd")) * 546546132, 0, ",", "");
+    $tmp2 = base64_encode($tmp);
+    $tmp2 = base64_encode(substr($tmp2, 11, -1));
+    return substr(strtolower($tmp2), 1, 11);
 }

@@ -122,7 +122,7 @@ include 'paginacja.php';
 echo "</p><div>    <table class=\"table table-bordered table-hover table-condensed \" style=\ width: 100%;\" >       
                 <thead style=\"  white-space: nowrap; \"><tr><th>Nazwa<a href = \"unique.php?unike=nazwa&inne=1\">[U]</a></th>
                 <th>Login<a href = \"unique.php?unike=monitor&inne=1\">[U]</a></th>
-                <th>Wykryte monitory (w laptopach monitor może być niewidoczny)<a href = \"unique.php?unike=monitor&inne=1\">[U]</a></th>
+                <th>Wykryte monitory (Monitor wbudowany w laptopa często ma nieznany Serial i Nazwę)<a href = \"unique.php?unike=monitor&inne=1\">[U]</a></th>
                 <th>Data</th>
                 <form method=\"post\" action=\"$adres_tmp\" enctype=\"multipart/form-data\"><td>"
  . "<input type=\"submit\"  class=\"btn btn-default\" value=\"czyść\">"
