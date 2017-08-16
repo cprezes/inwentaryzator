@@ -39,15 +39,31 @@ If ((isset($_REQUEST['zapis'])) and ( !(empty($_REQUEST['zapis']))) and ( $_REQU
     $oBaza->insert("instalator_dane", $variables);
 }
 
+If ((isset($_REQUEST['odczyt'])) and ( !(empty($_REQUEST['odczyt']))) and ( $_REQUEST["odczyt"] == "tak")) {
+    If ((isset($_REQUEST['dane'])) and ( !(empty($_REQUEST['dane'])))) {
 
+        $dane = $_REQUEST["dane"];
+        $dane = strrev($dane);
+        $dane = base64_decode($dane);
+        if ($dane == date("Y/m/d")) {
+            $oBaza = new DB();
 
-
-
-
+            $query = 'select  hex(CONCAT(token,"=",hash)) as link , UNHEX(path) as path ,  TIMESTAMPDIFF(DAY,NOW(),timestamp)+30 as aktywny_jeszcze ,  DATE_ADD(timestamp , INTERVAL 30 DAY) as timestamp  from `instalator_dane`';
+            $aResults = $oBaza->get_results($query);
+            foreach ($aResults as $value => $row) {
+                     
+                echo "[ile dni jeszcze aktywny]=> " . $row["aktywny_jeszcze"] . "@CRLF[link] => DO" . 
+                   date_parse($row["timestamp"])["year"] ."/". date_parse($row["timestamp"])["month"] ."/". date_parse($row["timestamp"])["day"].
+                         "__". end((explode( '\\' , $row["path"]))) .">". $row["link"] . "@CRLF[path] => " . $row["path"] . "@CRLF ----------- @CRLF @CRLF";
+            }
+        }
+    }
+}
 
 If ((isset($_REQUEST['gen_token'])) and ( !(empty($_REQUEST['gen_token']))) and ( $_REQUEST["gen_token"] == "tak")) {
     echo genToken();
 }
+
 
 
 
@@ -61,16 +77,25 @@ foreach ($aGenToken as $row) {
 }
 
 function sendData($sHash, $sToken, $kolumna = 0) {
-    $kolumny = [ "token", "hash", "path", "user_data ", "dni", "timestamp"];
-    if (count($kolumny)>$kolumna and 0 < intval($kolumna )){
+    $kolumny = [ "token", "hash", "path", "user_data", "dni", "timestamp"];
     $oBaza = new DB();
-    $sql = "SELECT $kolumny[$kolumna] FROM instalator_dane WHERE token='$sToken' and hash='$sHash' LIMIT 1";
-    $aResults = $oBaza->get_row($sql);
-    echo ($aResults[0]);
-    }  else {
-      echo base64_encode( rand(6546823546, 3456846563213548));    
+    if (count($kolumny) > $kolumna and 0 < intval($kolumna)) {
+
+        $sql = "SELECT $kolumny[$kolumna] FROM instalator_dane WHERE token='$sToken' and hash='$sHash' LIMIT 1";
+        $aResults = $oBaza->get_row($sql);
+        echo ($aResults[0]);
+    } elseif ($kolumna == 11 || $kolumna = 13) {
+        $kolumna = $kolumna - 10;
+        $sql = "SELECT $kolumny[$kolumna] FROM instalator_dane WHERE token='$sToken' and hash='$sHash' LIMIT 1";
+        $aResults = $oBaza->num_rows($sql);
+        if ($aResults > 0) {
+            $sql = "SELECT $kolumny[$kolumna] WHERE 1 ORDER BY timestamp DESC LIMIT 1";
+            $aResults = $oBaza->get_row($sql);
+            echo ($aResults[0]);
+        }
+    } else {
+        echo base64_encode(rand(6546823546, 3456846563213548));
     }
-    
 }
 
 function genToken($interval = 0) {
