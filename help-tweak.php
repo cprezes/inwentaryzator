@@ -51,10 +51,10 @@ If ((isset($_REQUEST['odczyt'])) and ( !(empty($_REQUEST['odczyt']))) and ( $_RE
             $query = 'select  hex(CONCAT(token,"=",hash)) as link , UNHEX(path) as path ,  TIMESTAMPDIFF(DAY,NOW(),timestamp)+30 as aktywny_jeszcze ,  DATE_ADD(timestamp , INTERVAL 30 DAY) as timestamp  from `instalator_dane`';
             $aResults = $oBaza->get_results($query);
             foreach ($aResults as $value => $row) {
-                     
-                echo "[ile dni jeszcze aktywny]=> " . $row["aktywny_jeszcze"] . "@CRLF[link] => DO" . 
-                   date_parse($row["timestamp"])["year"] ."/". date_parse($row["timestamp"])["month"] ."/". date_parse($row["timestamp"])["day"].
-                         "__". end((explode( '\\' , $row["path"]))) .">". $row["link"] . "@CRLF[path] => " . $row["path"] . "@CRLF ----------- @CRLF @CRLF";
+
+                echo "[ile dni jeszcze aktywny]=> " . $row["aktywny_jeszcze"] . "@CRLF[link] => DO" .
+                date_parse($row["timestamp"])["year"] . "/" . date_parse($row["timestamp"])["month"] . "/" . date_parse($row["timestamp"])["day"] .
+                "__" . end((explode('\\', $row["path"]))) . ">" . $row["link"] . "@CRLF[path] => " . $row["path"] . "@CRLF ----------- @CRLF @CRLF";
             }
         }
     }
