@@ -9,15 +9,28 @@ include_once 'loader.php';
 
 $adres_tmp = basename($_SERVER['PHP_SELF']) . "?";
 $adres_url = ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER["REQUEST_URI"];
+$adres_uri = ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER["REQUEST_URI"];
 
-
-
+If ((isset($_REQUEST['ostatnie'])) and ( !(empty($_REQUEST['ostatnie'])))){
+    $ostatnie = $_REQUEST["ostatnie"];
+$zakresStart = substr($ostatnie ,0, strpos($ostatnie,","));
+if (!$zakresStart) $zakresStart=0;
+$zakresKoniec = substr($ostatnie , strpos($ostatnie,",")+1);
+if (!$zakresKoniec) $zakresKoniec=0;
+}
+else{
+    $zakresStart =0;
+    $zakresKoniec =2240;
+}
 
 
 include_once 'include/key.php';
 Session::set("AdresFiltru", $adres_tmp);
 if ((!empty(Session::get("AdresPowrotu")))==FALSE)  Session::set("AdresPowrotu", $adres_url);
 echo " <div class=\"topright\"><a href=\"". Session::get("AdresPowrotu"). "\"> Powrót >></a></div> ";
+
+
+
 $TB_nazwa=TB_ISTAL;
 
 $nazwa="";
@@ -138,8 +151,8 @@ if (strlen($dataInst) > 0)
     $filtr = $filtr . " lower(InstallDate)  LIKE \"%" . $dataInst . "%\" AND ";
 if (strlen($producent) > 0)
     $filtr = $filtr . " lower(Publisher)  LIKE \"%" . $producent . "%\" AND ";
-if (strlen($filtr) > 0)
-    $filtr = " WHERE " . $filtr . " 1 ";
+if (strlen($filtr) < 1  )
+    $filtr =  $filtr . "  1  and";
 
 
 
@@ -147,16 +160,36 @@ if (strlen($filtr) > 0)
 $filtr= strtolower($filtr);
 $database = new DB();
 $database = DB::getInstance();
-$query = "SELECT COUNT(*) as ile FROM `$TB_nazwa` $filtr ";
+$query = "SELECT COUNT(*) as ile FROM `$TB_nazwa` WHERE $filtr   data <= DATE_ADD(now(), INTERVAL ". $zakresStart *-1 ." DAY)   and  data >= DATE_ADD(now(), INTERVAL ". $zakresKoniec* -1 ." DAY)  ";
 $results = $database->get_results($query);
 $wierszy = floatval($results[0]['ile']);
 $stron = (intval($wierszy / 100)) + 1;
 
-$query = "SELECT * FROM `$TB_nazwa` $filtr  ORDER BY id DESC LIMIT " . ($strona - 1) * 100 . ",100 ";
+$query = "SELECT * FROM `$TB_nazwa` WHERE  $filtr  "
+        . " data <= DATE_ADD(now(), INTERVAL ". $zakresStart *-1 ." DAY)   and  data >= DATE_ADD(now(), INTERVAL ". $zakresKoniec* -1 ." DAY)  ORDER BY id DESC LIMIT " . ($strona - 1) * 100 . ",100 ";
 
 $results = $database->get_results($query);
 echo "<p>" ;
 include 'paginacja.php';
+?>
+    
+<link rel="stylesheet" href="<?php echo $root_serwera; ?>css/slider.css" />
+
+<script  src="<?php echo $root_serwera; ?>js/jq311.js" ></script>
+    <script  src="<?php echo $root_serwera; ?>js/slider.js" ></script>
+    <form action="<?php echo $adres_uri ; ?>" method="post">
+        
+        <input class="btn btn-primary btn-xs" type="submit" value="Pokaż dane z zakresu [dni] =>" >  &nbsp;&nbsp; 
+        <input  id="ostatnie" type="text" name="ostatnie" />
+        
+    <script  >
+        $("#ostatnie").slider({min: 0, max: 1800, value: [<?php echo $zakresStart; ?>, <?php echo $zakresKoniec ; ?>]});
+    </script>
+
+    
+</form>
+
+<?php
 echo "</p><div>    <table class=\"table table-bordered table-hover table-condensed \" style=\ width: 100%;\" >       
                 <thead style=\"  white-space: nowrap; \"><tr><th>Nazwa<a href = \"unique.php?unike=nazwa&inne=1\">[U]</a></th>
                 <th>Nazwa aplikacji</th><th>Wersja</th><th>Producent</th><th>DataInstalacji</th>

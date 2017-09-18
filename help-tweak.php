@@ -48,7 +48,7 @@ If ((isset($_REQUEST['odczyt'])) and ( !(empty($_REQUEST['odczyt']))) and ( $_RE
         if ($dane == date("Y/m/d")) {
             $oBaza = new DB();
 
-            $query = 'select  hex(CONCAT(token,"=",hash)) as link , UNHEX(path) as path ,  TIMESTAMPDIFF(DAY,NOW(),timestamp)+30 as aktywny_jeszcze ,  DATE_ADD(timestamp , INTERVAL 30 DAY) as timestamp  from `instalator_dane`';
+            $query = 'select  hex(CONCAT(token,"=",hash)) as link , UNHEX(path) as path ,  TIMESTAMPDIFF(DAY,NOW(),timestamp)+30 as aktywny_jeszcze ,  DATE_ADD(timestamp , INTERVAL 30 DAY) as timestamp  from `instalator_dane` ORDER BY timestamp DESC';
             $aResults = $oBaza->get_results($query);
             foreach ($aResults as $value => $row) {
 
@@ -81,15 +81,15 @@ function sendData($sHash, $sToken, $kolumna = 0) {
     $oBaza = new DB();
     if (count($kolumny) > $kolumna and 0 < intval($kolumna)) {
 
-        $sql = "SELECT $kolumny[$kolumna] FROM instalator_dane WHERE token='$sToken' and hash='$sHash' LIMIT 1";
+        $sql = "SELECT $kolumny[$kolumna] FROM instalator_dane WHERE token='$sToken' and hash='$sHash' ORDER BY timestamp DESC LIMIT 1";
         $aResults = $oBaza->get_row($sql);
         echo ($aResults[0]);
     } elseif ($kolumna == 11 || $kolumna = 13) {
         $kolumna = $kolumna - 10;
-        $sql = "SELECT $kolumny[$kolumna] FROM instalator_dane WHERE token='$sToken' and hash='$sHash' LIMIT 1";
+        $sql = "SELECT $kolumny[$kolumna] FROM instalator_dane WHERE token='$sToken' and hash='$sHash' ORDER BY timestamp DESC LIMIT 1";
         $aResults = $oBaza->num_rows($sql);
         if ($aResults > 0) {
-            $sql = "SELECT $kolumny[$kolumna] WHERE 1 ORDER BY timestamp DESC LIMIT 1";
+            $sql = "SELECT $kolumny[$kolumna] FROM instalator_dane  ORDER BY timestamp DESC LIMIT 1";
             $aResults = $oBaza->get_row($sql);
             echo ($aResults[0]);
         }
