@@ -12,48 +12,39 @@ if (empty($_REQUEST['login'])) {
     If (((isset($_REQUEST['tokien'])) and ( !(empty($_REQUEST['tokien']))))) {
         $tokien = $_REQUEST["tokien"];
         if (base64_encode($tmp2) == $tokien) {
-            
+            ?> <link rel="stylesheet" href="css/bootstrap.css" /> <link rel="stylesheet" href="css/style.css" />
+            <style>
+                input { 
+                    white-space: nowrap;}
+                .inputItem {
+                    padding-left: 2px;
+                    padding-right: 2px;
+                }
+
+            </style>
+            <?php
+            $prg = new userView();
+            $query = "select login as Login , opis as Imie_Nazwisko, EmailAddress as E_mail, MobilePhone as Telefon, "
+                    . "case Enabled when 'True' then '' when 'False' then 'Zablokowany'  end as Czy_zablokowany "
+                    . ", data as Sprawdzono from users";
+
+            $link = mysql_connect(DB_HOST, KONTO2, KONTO2_PASS);
+            mysql_set_charset('utf8', $link);
+
+            //pobierz liste plików z katalogu
+            $target_dir = "./pracownicy";
+            $files = array_diff(scandir($target_dir), array('.', '..'));
+
+            mysql_select_db(DB_NAME);
+            $res = mysql_query($query);
+            $files = array_map('strtolower', $files);
+            $prg->mysql_resource = $res;
+            $prg->filesArray = $files;
+            $prg->targetDir = $target_dir;
+            $prg->generateReport();
         }
     }
-    ?> <link rel="stylesheet" href="css/bootstrap.css" /> <link rel="stylesheet" href="css/style.css" />
-    <style>
-        input { 
-            white-space: nowrap;}
-        .inputItem {
-            padding-left: 2px;
-            padding-right: 2px;
-        }
-
-    </style>
-    <?php
-    $prg = new userView();
-    $query = "select login as Login , opis as Imie_Nazwisko, EmailAddress as E_mail, MobilePhone as Telefon, "
-            . "case Enabled when 'True' then '' when 'False' then 'Zablokowany'  end as Czy_zablokowany "
-            . ", data as Sprawdzono from users";
-
-    $link = mysql_connect(DB_HOST, KONTO2, KONTO2_PASS);
-    mysql_set_charset('utf8', $link);
-
-    //pobierz liste plików z katalogu
-    $target_dir = "./pracownicy";
-    $files = array_diff(scandir($target_dir), array('.', '..'));
-
-    mysql_select_db(DB_NAME);
-    $res = mysql_query($query);
-
-    $prg->mysql_resource = $res;
-    $prg->filesArray = $files;
-    $prg->targetDir = $target_dir;
-    $prg->generateReport();
 }
-
-//}
-//}
-
-
-
-
-
 
 class userView {
 
@@ -117,20 +108,22 @@ class userView {
                 //Now Draw Data
                 echo "<td>" . $rows[$i] . "</td>";
                 if ($i == $field_count - 1) {
-                    $loginToHex = unpack('H*', "$rows[0]")[1];
+                    $loginToHex = strtolower(unpack('H*', "$rows[0]")[1]);
+                    $loginToHexJPG = strtolower($loginToHex . '.jpg');
                     echo "<td>";
-                    if (in_array($loginToHex . '.jpg', $this->filesArray)) {
-                        echo"  <div class='col-sm-2'><a href='" . $this->targetDir . "/" . $loginToHex . '.jpg' . "'>Zdjecie</a></div> ";
+
+                    if (in_array($loginToHexJPG, $this->filesArray)) {
+                        echo"  <div class='col-sm-2'><a href='" . $this->targetDir . "/" . $loginToHexJPG . "'>Zdjecie</a></div> ";
                     }
                     ?>   
                     <form action="upload.php" method="post" enctype="multipart/form-data"  > 
-                      <div class="form-group">  
-                        <div class="btn-group btn-group-xs">   
- 
- <input  type="hidden" name ="name" value="<?php echo $loginToHex; ?>"/>
-     <div class="col-sm-2"> <input  class="btn btn-default" type="submit" value="Dodaj" name="submit"/></div>
-     <div class="col-sm-3">    <input class="btn btn-default"  type="file" name="fileToUpload" id="fileToUpload" /></div>
-             </form></div></div></td>
+                        <div class="form-group">  
+                            <div class="btn-group btn-group-xs">   
+
+                                <input  type="hidden" name ="name" value="<?php echo $loginToHex; ?>"/>
+                                <div class="col-sm-2"> <input  class="btn btn-default" type="submit" value="Dodaj" name="submit"/></div>
+                                <div class="col-sm-3"> <input class="btn btn-default"  type="file" name="fileToUpload" id="fileToUpload" /></div>
+                                </form></div></div></td>
                     <?php
                 }
             }

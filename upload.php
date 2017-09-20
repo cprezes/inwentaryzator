@@ -1,5 +1,6 @@
 
 <?php
+$uploadOk=0;
 If (((isset($_REQUEST['name'])) and ( !(empty($_REQUEST['name']))))){
 
 $target_dir = "pracownicy/";
@@ -16,7 +17,7 @@ if(isset($_POST["submit"])) {
         echo "Twój plik jest typu  - " . $check["mime"] . ". ";
         $uploadOk = 1;
     } else {
-        echo "Plik nie jest grafiką.<br/>";
+        echo "Plik nie jest akceptowalnym plikiem graficznym. Zapisz plik ponwonie jako JPG za pomocą MS Paint.<br/>";
         $uploadOk = 0;
     }
 }
@@ -32,7 +33,7 @@ if ($_FILES["fileToUpload"]["size"] > 50000000) {
     $uploadOk = 0;
 }
 // Allow certain file formats
-if($imageFileType != "jpg" ) {
+if($imageFileType != "jpg" && $imageFileType != "JPG" && $imageFileType != "jpeg" && $imageFileType != "JPEG" ) {
     echo "Plik może być JPG. <br/>";
     $uploadOk = 0;
 }
@@ -47,6 +48,6 @@ if ($uploadOk == 0) {
         echo "Wystąpił błąd.";
     }
 }
-}
- header("refresh:3;url=".$_SERVER["HTTP_REFERER"]);
+} 
+if ( $uploadOk ==1) { header("refresh:3;url=".$_SERVER["HTTP_REFERER"]);}
 
