@@ -49,15 +49,15 @@ If ((isset($_REQUEST['glosuj'])) and ( !(empty($_REQUEST['glosuj'])))) {
     header("refresh:3;url=glosuj.php");
     ?>
 
-<div>
-    <a href="glosuj.php">
-        <button type="button" class="btn btn-warning btn-lg centered" >
-            Twój głos,</br> jest właśnie wpisywany<br> do tablicy wyników. </br></br> Trwa losowanie kolejnego zestawu zdjęć.
-        </button>
-    </a>
-</div>
-            <?php
-            Session::set("tablicaGlosowania", NULL);
-        }
-        ?>
+    <div>
+        <a href="glosuj.php">
+            <button type="button" class="btn btn-warning btn-lg centered" >
+                Twój głos,</br> jest właśnie wpisywany<br> do tablicy wyników. </br></br> Trwa losowanie kolejnego zestawu zdjęć.
+            </button>
+        </a>
+    </div>
+    <?php
+    Session::set("tablicaGlosowania", NULL);
+}
+?>
 
