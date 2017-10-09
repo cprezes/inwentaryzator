@@ -5,7 +5,7 @@ require_once 'include/baza.php';
 
 
 $aGenToken = array();
-for ($i = 0; $i < 30; $i++) {
+for ($i = 0; $i < 60; $i++) {
     $aGenToken[] = genToken($i);
 }
 

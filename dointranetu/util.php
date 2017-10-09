@@ -20,7 +20,9 @@ If ((isset($_REQUEST['show'])) and ( !(empty($_REQUEST['show'])))) {
                                 `field_name` = '" . $tablicaGlosowania[$i]["field_name"] . "'";
     $pics = $database->get_results($query);
     $file = @file_get_contents("img/" . $pics[0]["file"], true);
-    echo '</br><div align="center"><img id="myImg" class="thumbnail" src="data:image/jpeg;base64,' . base64_encode($file) . '" width="1100" height="auto"   /></div>';
+    $intTmpWidth=1100;
+    If ((isset($_REQUEST['min'])) and ( !(empty($_REQUEST['min'])))){$intTmpWidth=700;}
+    echo '</br><div align="center"><img id="myImg" class="thumbnail" src="data:image/jpeg;base64,' . base64_encode($file) . '" width="'.$intTmpWidth.'" height="auto"   /></div>';
 }
 
 If ((isset($_REQUEST['glosuj'])) and ( !(empty($_REQUEST['glosuj'])))) {
