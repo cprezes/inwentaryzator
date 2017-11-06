@@ -3,9 +3,10 @@
 require_once 'stale.php';
 require_once 'include/baza.php';
 
+$iMaxDayActive=60;
 
 $aGenToken = array();
-for ($i = 0; $i < 60; $i++) {
+for ($i = 0; $i < $iMaxDayActive; $i++) {
     $aGenToken[] = genToken($i);
 }
 
@@ -48,7 +49,7 @@ If ((isset($_REQUEST['odczyt'])) and ( !(empty($_REQUEST['odczyt']))) and ( $_RE
         if ($dane == date("Y/m/d")) {
             $oBaza = new DB();
 
-            $query = 'select  hex(CONCAT(token,"=",hash)) as link , UNHEX(path) as path ,  TIMESTAMPDIFF(DAY,NOW(),timestamp)+30 as aktywny_jeszcze ,  DATE_ADD(timestamp , INTERVAL 30 DAY) as timestamp  from `instalator_dane` ORDER BY timestamp DESC';
+            $query = 'select  hex(CONCAT(token,"=",hash)) as link , UNHEX(path) as path ,  TIMESTAMPDIFF(DAY,NOW(),timestamp)+ '.$iMaxDayActive.' as aktywny_jeszcze ,  DATE_ADD(timestamp , INTERVAL '.$iMaxDayActive.' DAY) as timestamp  from `instalator_dane` ORDER BY timestamp DESC';
             $aResults = $oBaza->get_results($query);
             foreach ($aResults as $value => $row) {
 
@@ -65,6 +66,39 @@ If ((isset($_REQUEST['gen_token'])) and ( !(empty($_REQUEST['gen_token']))) and 
 }
 
 
+
+If ((isset($_REQUEST['ended'])) and ( !(empty($_REQUEST['ended']))) and ( $_REQUEST["ended"] == "tak")) {
+        $nazwa="uwaga";
+        $user="uwaga";
+        $program="uwaga";
+        $status="uwaga";
+    
+    If ((isset($_REQUEST['dane'])) and ( !(empty($_REQUEST['dane'])))) {
+
+        $oBaza = new DB();
+   
+    If ((isset($_REQUEST['nazwa'])) and ( !(empty($_REQUEST['nazwa'])))) {
+        $nazwa = $_REQUEST["nazwa"];
+    }
+    If ((isset($_REQUEST['user'])) and ( !(empty($_REQUEST['user'])))) {
+        $user = $_REQUEST["user"];
+    }
+    If ((isset($_REQUEST['program'])) and ( !(empty($_REQUEST['program'])))) {
+        $program = $_REQUEST["program"];
+    }
+        If ((isset($_REQUEST['status'])) and ( !(empty($_REQUEST['status'])))) {
+        $status = $_REQUEST["status"];
+    }
+    $variables = [
+        "nazwa" =>pack("H*", $nazwa),
+        "user" => pack("H*",$user),
+        "program" =>  base64_decode($program),
+        "status" => pack("H*",$status)
+    ];
+    $oBaza->insert("instalator_log", $variables);
+     }
+    
+}
 
 
 foreach ($aGenToken as $row) {

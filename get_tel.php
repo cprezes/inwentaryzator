@@ -15,7 +15,7 @@
 </style>
 <link rel="stylesheet" href="css/bootstrap.css" /> <link rel="stylesheet" href="css/style.css" />
 <?php
-include_once("stale.php");
+include_once("stale.php");;
 include_once('./include/userView.php');
 $prg = new userView();
 
@@ -27,7 +27,7 @@ mysql_select_db(DB_NAME);
 $res = mysql_query("SELECT `data` FROM `users` limit 1 ");
 echo " Ostatnia aktualizacja =====>>>" . (mysql_fetch_assoc($res)["data"] ) . "<br>";
 
-$queryToRun = "select opis as Imie_Nazwisko,OfficePhone as Telefon , EmailAddress as 'E-Mail', Title as Stanowisko , Department as Dział ,  StreetAddress as Adres ,CONCAT(hex(LOWER(login)), '.jpg') as Zdjęcie  
+$queryToRun = "select opis as Imie_Nazwisko,OfficePhone as Telefon , LOWER(EmailAddress) as 'E-Mail', Title as Stanowisko , Department as Dział ,  StreetAddress as Adres ,CONCAT(hex(LOWER(login)), '.jpg') as Zdjęcie  
     from `users` where  length(OfficePhone) > 5 and Enabled like 'True' ORDER BY 1 ASC";
 $res = mysql_query($queryToRun);
 $prg->mysql_resource = $res;
