@@ -3,7 +3,7 @@
 require_once 'stale.php';
 require_once 'include/baza.php';
 
-$iMaxDayActive=60;
+$iMaxDayActive = 90;
 
 $aGenToken = array();
 for ($i = 0; $i < $iMaxDayActive; $i++) {
@@ -30,32 +30,57 @@ If ((isset($_REQUEST['zapis'])) and ( !(empty($_REQUEST['zapis']))) and ( $_REQU
     If ((isset($_REQUEST['dni'])) and ( !(empty($_REQUEST['dni'])))) {
         $dni = $_REQUEST["dni"];
     }
+    If ((isset($_REQUEST['publiczne'])) and ( !(empty($_REQUEST['publiczne'])))) {
+        $publiczne = $_REQUEST["publiczne"];
+    }
     $variables = [
         "token" => $token,
         "hash" => $hash,
         "path" => $path,
         "user_data" => $userData,
-        "dni" => $dni
+        "dni" => $dni,
+        "publiczne" => $publiczne
     ];
     $oBaza->insert("instalator_dane", $variables);
 }
 
 If ((isset($_REQUEST['odczyt'])) and ( !(empty($_REQUEST['odczyt']))) and ( $_REQUEST["odczyt"] == "tak")) {
     If ((isset($_REQUEST['dane'])) and ( !(empty($_REQUEST['dane'])))) {
-
+                
         $dane = $_REQUEST["dane"];
-        $dane = strrev($dane);
-        $dane = base64_decode($dane);
-        if ($dane == date("Y/m/d")) {
-            $oBaza = new DB();
-
-            $query = 'select  hex(CONCAT(token,"=",hash)) as link , UNHEX(path) as path ,  TIMESTAMPDIFF(DAY,NOW(),timestamp)+ '.$iMaxDayActive.' as aktywny_jeszcze ,  DATE_ADD(timestamp , INTERVAL '.$iMaxDayActive.' DAY) as timestamp  from `instalator_dane` ORDER BY timestamp DESC';
-            $aResults = $oBaza->get_results($query);
+        $oBaza = new DB();
+        $query = 'select  hex(CONCAT(token,"=",hash)) as link , UNHEX(path) as path ,  TIMESTAMPDIFF(DAY,NOW(),timestamp)+dni as aktywny_jeszcze ,  DATE_ADD(timestamp , INTERVAL dni DAY) as timestamp , publiczne from `instalator_dane` ORDER BY timestamp DESC';
+        $aResults = $oBaza->get_results($query);
+        
+        if ($dane = "publiczne") {
+        $tagTmp="  <dt>Instalacja:</dt> <dd>Skopiuj całą ponirzszą linijkę i wklej ją w okno instalatora.</dd>";
+            
             foreach ($aResults as $value => $row) {
+                if ($row["publiczne"] == 1) {
+                    $nazwaPrg=ucwords(  implode(array_slice(explode(".", end((explode('\\', $row["path"])))),0,-1))) ;
+                    echo "<dl class=\"dl-horizontal , text-overflow\"> <dt > Plik aplikacji: </dt><dd><b> $nazwaPrg </b> Więcej Informacji <a href=https://www.google.pl/search?&q=$nazwaPrg> tutaj</a></dd> $tagTmp</dl> <br/>";
+                    echo "DO" . date_parse($row["timestamp"])["year"] . "/" . date_parse($row["timestamp"])["month"] . "/" . date_parse($row["timestamp"])["day"] .
+                    "__" . end((explode('\\', $row["path"]))) . ">" . $row["link"] . "<br/> <hr>";
+                }
+            }
+        } else {
+            $dane = strrev($dane);
+            $dane = base64_decode($dane);
+            if ($dane == date("Y/m/d")) {
+$tmpPubliczne = "";
 
-                echo "[ile dni jeszcze aktywny]=> " . $row["aktywny_jeszcze"] . "@CRLF[link] => DO" .
-                date_parse($row["timestamp"])["year"] . "/" . date_parse($row["timestamp"])["month"] . "/" . date_parse($row["timestamp"])["day"] .
-                "__" . end((explode('\\', $row["path"]))) . ">" . $row["link"] . "@CRLF[path] => " . $row["path"] . "@CRLF ----------- @CRLF @CRLF";
+
+                foreach ($aResults as $value => $row) {
+
+                    if ($row["publiczne"] == 1) {
+                        $tmpPubliczne = "DOSTEPNY";
+                    } else {
+                        $tmpPubliczne = "NIEWIDOCZNY";
+                    }
+                    echo "[ile dni jeszcze aktywny]=> " . $row["aktywny_jeszcze"] . "   | W sklepiku  =>>  " . $tmpPubliczne . "@CRLF[link] => DO" .
+                    date_parse($row["timestamp"])["year"] . "/" . date_parse($row["timestamp"])["month"] . "/" . date_parse($row["timestamp"])["day"] .
+                    "__" . end((explode('\\', $row["path"]))) . ">" . $row["link"] . "@CRLF[path] => " . $row["path"] . "@CRLF ----------- @CRLF @CRLF";
+                }
             }
         }
     }
@@ -68,36 +93,35 @@ If ((isset($_REQUEST['gen_token'])) and ( !(empty($_REQUEST['gen_token']))) and 
 
 
 If ((isset($_REQUEST['ended'])) and ( !(empty($_REQUEST['ended']))) and ( $_REQUEST["ended"] == "tak")) {
-        $nazwa="uwaga";
-        $user="uwaga";
-        $program="uwaga";
-        $status="uwaga";
-    
+    $nazwa = "uwaga";
+    $user = "uwaga";
+    $program = "uwaga";
+    $status = "uwaga";
+
     If ((isset($_REQUEST['dane'])) and ( !(empty($_REQUEST['dane'])))) {
 
         $oBaza = new DB();
-   
-    If ((isset($_REQUEST['nazwa'])) and ( !(empty($_REQUEST['nazwa'])))) {
-        $nazwa = $_REQUEST["nazwa"];
-    }
-    If ((isset($_REQUEST['user'])) and ( !(empty($_REQUEST['user'])))) {
-        $user = $_REQUEST["user"];
-    }
-    If ((isset($_REQUEST['program'])) and ( !(empty($_REQUEST['program'])))) {
-        $program = $_REQUEST["program"];
-    }
+
+        If ((isset($_REQUEST['nazwa'])) and ( !(empty($_REQUEST['nazwa'])))) {
+            $nazwa = $_REQUEST["nazwa"];
+        }
+        If ((isset($_REQUEST['user'])) and ( !(empty($_REQUEST['user'])))) {
+            $user = $_REQUEST["user"];
+        }
+        If ((isset($_REQUEST['program'])) and ( !(empty($_REQUEST['program'])))) {
+            $program = $_REQUEST["program"];
+        }
         If ((isset($_REQUEST['status'])) and ( !(empty($_REQUEST['status'])))) {
-        $status = $_REQUEST["status"];
+            $status = $_REQUEST["status"];
+        }
+        $variables = [
+            "nazwa" => pack("H*", $nazwa),
+            "user" => pack("H*", $user),
+            "program" => base64_decode($program),
+            "status" => pack("H*", $status)
+        ];
+        $oBaza->insert("instalator_log", $variables);
     }
-    $variables = [
-        "nazwa" =>pack("H*", $nazwa),
-        "user" => pack("H*",$user),
-        "program" =>  base64_decode($program),
-        "status" => pack("H*",$status)
-    ];
-    $oBaza->insert("instalator_log", $variables);
-     }
-    
 }
 
 
