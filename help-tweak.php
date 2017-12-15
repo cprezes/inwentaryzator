@@ -46,45 +46,33 @@ If ((isset($_REQUEST['zapis'])) and ( !(empty($_REQUEST['zapis']))) and ( $_REQU
 
 If ((isset($_REQUEST['odczyt'])) and ( !(empty($_REQUEST['odczyt']))) and ( $_REQUEST["odczyt"] == "tak")) {
     If ((isset($_REQUEST['dane'])) and ( !(empty($_REQUEST['dane'])))) {
-                
+
         $dane = $_REQUEST["dane"];
-        $oBaza = new DB();
-        $query = 'select  hex(CONCAT(token,"=",hash)) as link , UNHEX(path) as path ,  TIMESTAMPDIFF(DAY,NOW(),timestamp)+dni as aktywny_jeszcze ,  DATE_ADD(timestamp , INTERVAL dni DAY) as timestamp , publiczne from `instalator_dane` ORDER BY timestamp DESC';
-        $aResults = $oBaza->get_results($query);
-        
-        if ($dane = "publiczne") {
-        $tagTmp="  <dt>Instalacja:</dt> <dd>Skopiuj całą ponirzszą linijkę i wklej ją w okno instalatora.</dd>";
-            
+
+        $dane = strrev($dane);
+        $dane = base64_decode($dane);
+        if ($dane == date("Y/m/d")) {
+            $tmpPubliczne = "";
+            $oBaza = new DB();
+            $query = 'select  hex(CONCAT(token,"=",hash)) as link , UNHEX(path) as path ,  TIMESTAMPDIFF(DAY,NOW(),timestamp)+dni as aktywny_jeszcze ,  DATE_ADD(timestamp , INTERVAL dni DAY) as timestamp , publiczne from `instalator_dane` ORDER BY timestamp DESC';
+            $aResults = $oBaza->get_results($query);
+
+
             foreach ($aResults as $value => $row) {
+
                 if ($row["publiczne"] == 1) {
-                    $nazwaPrg=ucwords(  implode(array_slice(explode(".", end((explode('\\', $row["path"])))),0,-1))) ;
-                    echo "<dl class=\"dl-horizontal , text-overflow\"> <dt > Plik aplikacji: </dt><dd><b> $nazwaPrg </b> Więcej Informacji <a href=https://www.google.pl/search?&q=$nazwaPrg> tutaj</a></dd> $tagTmp</dl> <br/>";
-                    echo "DO" . date_parse($row["timestamp"])["year"] . "/" . date_parse($row["timestamp"])["month"] . "/" . date_parse($row["timestamp"])["day"] .
-                    "__" . end((explode('\\', $row["path"]))) . ">" . $row["link"] . "<br/> <hr>";
+                    $tmpPubliczne = "DOSTEPNY";
+                } else {
+                    $tmpPubliczne = "NIEWIDOCZNY";
                 }
-            }
-        } else {
-            $dane = strrev($dane);
-            $dane = base64_decode($dane);
-            if ($dane == date("Y/m/d")) {
-$tmpPubliczne = "";
-
-
-                foreach ($aResults as $value => $row) {
-
-                    if ($row["publiczne"] == 1) {
-                        $tmpPubliczne = "DOSTEPNY";
-                    } else {
-                        $tmpPubliczne = "NIEWIDOCZNY";
-                    }
-                    echo "[ile dni jeszcze aktywny]=> " . $row["aktywny_jeszcze"] . "   | W sklepiku  =>>  " . $tmpPubliczne . "@CRLF[link] => DO" .
-                    date_parse($row["timestamp"])["year"] . "/" . date_parse($row["timestamp"])["month"] . "/" . date_parse($row["timestamp"])["day"] .
-                    "__" . end((explode('\\', $row["path"]))) . ">" . $row["link"] . "@CRLF[path] => " . $row["path"] . "@CRLF ----------- @CRLF @CRLF";
-                }
+                echo "[ile dni jeszcze aktywny]=> " . $row["aktywny_jeszcze"] . "   | W sklepiku  =>>  " . $tmpPubliczne . "@CRLF[link] => DO" .
+                date_parse($row["timestamp"])["year"] . "/" . date_parse($row["timestamp"])["month"] . "/" . date_parse($row["timestamp"])["day"] .
+                "__" . end((explode('\\', $row["path"]))) . ">" . $row["link"] . "@CRLF[path] => " . $row["path"] . "@CRLF ----------- @CRLF @CRLF";
             }
         }
     }
 }
+
 
 If ((isset($_REQUEST['gen_token'])) and ( !(empty($_REQUEST['gen_token']))) and ( $_REQUEST["gen_token"] == "tak")) {
     echo genToken();
@@ -164,3 +152,5 @@ function genToken($interval = 0) {
     $tmp2 = base64_encode(substr($tmp2, 11, -1));
     return substr(strtolower($tmp2), 1, 11);
 }
+
+

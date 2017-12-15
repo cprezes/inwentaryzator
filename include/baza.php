@@ -50,6 +50,8 @@ class DB {
     public $filter;
     static $inst = null;
     public static $counter = 0;
+    private $header;
+    private $fields = array();
 
     /**
      * Allow the class to send admins a message alerting them to errors
@@ -775,6 +777,91 @@ class DB {
      */
     public function disconnect() {
         $this->link->close();
+    }
+
+    /**
+     * This method trying draw table, if data added is correct.
+     *
+     * Example usage:
+     * generateReport( $DB->get_results($query)) ;
+     *
+     * @access public
+     * @param array
+     * @return bool
+     *
+     */
+    public function generateReport($res) {
+        if (count($res) < 1) {
+            return FALSE;
+        }
+        $fields = array_keys($res[0]);
+        echo '<div><table class="table table-bordered table-hover table-condensed" style="width: 100%;" >';
+        echo "<thead style=\"  white-space: nowrap; \">";
+        foreach ($fields as $fileld) {
+            $upfist = ucfirst(strtolower($fileld));
+            echo "<th><center>$upfist</center></th>";
+        }
+        echo "</thead><tbody>";
+
+        foreach ($res as $row) {
+            echo "<tr>";
+            foreach ($fields as $fileld) {
+
+                echo "<td>" . $row[$fileld] . "</td>";
+            }
+            echo "</tr>";
+        }
+        echo "</table>";
+        echo "</td></tr></tbody></table></div>";
+
+        return True;
+    }
+
+    /**
+     * This method trying to build file compatible to MS Excel.
+     * Requre class ExportData 
+     *
+     * Example usage:
+     * generateExcel( $DB->get_results($query)) ;
+     *
+     * @access public
+     * @param array
+     * @return bool
+     *
+     */
+    public function generateExcel($res,$filename="default") {
+        if (count($res) < 1) {
+            return FALSE;
+        }
+        
+        require 'ExportData.php';
+        if ( $filename=="default"){
+        $now = gmdate("D, d M Y H:i:s");
+        $filename = "export_" . date("Y-m-d");
+        }
+        $oExport = new ExportDataExcel('browser', $filename. ".xls");
+
+        $fields = array_keys($res[0]);
+        foreach ($fields as $fileld) {
+            $upfist = ucfirst(strtolower($fileld));
+            $aHead[] = $upfist;
+        }
+        $oExport->addRow($aHead);
+        unset($aHead);
+
+        foreach ($res as $row) {
+            unset($aRow);
+            foreach ($fields as $fileld) {
+                $aRow[] = $row[$fileld];
+            }
+            $oExport->addRow($aRow);
+        }
+
+        $oExport->finalize();
+        exit();
+
+
+        return true;
     }
 
 }

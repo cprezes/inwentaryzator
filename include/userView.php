@@ -9,7 +9,7 @@ class userView {
     public $targetDir;
     private $field_count;
 
-    function __construct() {
+                function __construct() {
         $this->allowUpload = FALSE;
     }
 
@@ -17,8 +17,8 @@ class userView {
 
         //echo "modified_width : ".$this->modified_width."<br>"; 
         $this->checkIfIsData();
-
-        $this->field_count = mysql_num_fields($this->mysql_resource);
+        
+        $this->field_count = count( array_keys($this->mysql_resource[0]));;
 
         echo '<div><table class="table table-bordered table-hover table-condensed" style="width: 100%;" >';
         echo "<thead style=\"  white-space: nowrap; \">";
@@ -41,6 +41,7 @@ class userView {
         if (!is_array($array))
             return false;
         foreach ($array as $key => &$value) {
+            
             if (is_array($value))
                 call_user_func_array(__function__, array(&$value, $case));
             else
@@ -50,7 +51,7 @@ class userView {
     }
 
     private function checkIfIsData() {
-        if (!is_resource($this->mysql_resource))
+        if ( ($this->mysql_resource)< 1)
             die("<br>Zapytanie nie jest poprawne");
     }
 
@@ -65,32 +66,40 @@ class userView {
     }
 
     private function drawTable() {
-        while ($rows = mysql_fetch_row($this->mysql_resource)) {
+       foreach ($this->mysql_resource as $row) {
             echo "<tr>";
-            $this->takeTableLine($rows);
+            $this->takeTableLine($row);
+           
             echo "</tr>";
         }
     }
 
     private function takeTableLine($rows) {
-        for ($i = 0; $i < $this->field_count; $i++) {
-            $sField = $rows[$i];
-            if ($i == $this->field_count - 1) {
+            $i=0;
+         foreach ($this->headerFields as $fileld){
+            $sField = $rows[$fileld];
+   
+            if ($i == $this->field_count-1 ) {
                 $sField = strtolower($sField);
                 if (in_array($sField, $this->filesArray)) {
-                    $this->fieldDocorator($sField, "plusLink");
+                    $this->fieldDecorator($sField, "plusLink");
                 } else {
-                    $this->fieldDocorator($sField, "noLink");
+                    $this->fieldDecorator($sField, "noLink");
                 }
             } else {
-                $this->fieldDocorator($sField);
-            }
+                $this->fieldDecorator($sField);
+            
         }
-    }
+          $i++;
+       }
+     
+            }
+  
 
-    private function fieldDocorator($field, $type = "normal") {
+    private function fieldDecorator($field, $type = "normal") {
         echo "<td>";
-
+       
+        
         if ($type == "plusLink") {
             $linkShader = rtrim(base64_encode(rtrim($field, ".jpg")), '=');
 
@@ -125,13 +134,8 @@ class userView {
         }
 
         private function grabHeader() {
-            $i = 0;
-            while ($i < $this->field_count) {
-                $field = mysql_fetch_field($this->mysql_resource);
-                $this->headerFields[$i] = $field->name;
-                $this->headerFields[$i][0] = strtoupper($this->headerFields[$i][0]);
-                $i++;
-            }
+
+             $this->headerFields=array_keys($this->mysql_resource[0]);
         }
 
     }
