@@ -1,20 +1,9 @@
 <?php
-$locInstalator='u:\instalaTOR.exe';
-If ((isset($_REQUEST['id'])) and ( !(empty($_REQUEST['id']))))
-    $id = $_REQUEST["id"] ;
+If ((isset($_REQUEST['link'])) and ( !(empty($_REQUEST['link']))))
+    $link =  trim ($_REQUEST["link"] , " \t\n\r\0\x0B" ) ; else die(); 
+    $link = 'https://www.google.pl/search?&q='.$link;
+echo '<script type="text/javascript">
+           window.location = "'.$link.'"
+      </script>';
 
- $aId= explode(">", $id);
-$name = str_replace("/", "-", $aId[0]);
- $name = str_replace(".", "-", $name);
- var_dump($aId);
-         ?>
-
-
-<html>
-<body onload="Dodaj()">
-
-<script src="link.js" ></script>
-<center>
-    <input hidden type="text" value='"<?php echo $locInstalator. " " .$aId[1]?>"' id="target_lnk" />
-<h1>
-    <a href="#" id="pobierz" download="<?php echo $name; ?>">download</a></h1>
+echo '<h1><a href="'.$link.'">Kliknij tutaj</a></h1>';

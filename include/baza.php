@@ -17,32 +17,7 @@
  * * read at:
  * *
  * * http://www.opensource.org/licenses/gpl-license.php
- * *
- * * This program is distributed in the hope that it will be useful, but WITHOUT 
- * * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. 
- * *------------------------------------------------------------------------------ */
-/* * *****************************
-  Example initialization:
-
-  define( 'DB_HOST', 'localhost' ); // set database host
-  define( 'DB_USER', 'root' ); // set database user
-  define( 'DB_PASS', 'root' ); // set database password
-  define( 'DB_NAME', 'yourdatabasename' ); // set database name
-  define( 'SEND_ERRORS_TO', 'you@yourwebsite.com' ); //set email notification email address
-  define( 'DISPLAY_DEBUG', true ); //display db errors?
-  require_once( 'class.db.php' );
-
-  //Initiate the class
-  $database = new DB();
-
-  //OR...
-  $database = DB::getInstance();
-
-  NOTE:
-  All examples provided below assume that this class has been initiated
-  Examples below assume the class has been iniated using $database = DB::getInstance();
- * ****************************** */
+*/
 
 class DB {
 
@@ -139,15 +114,57 @@ class DB {
      * echo $database->clean( $data_from_database );
      *
      * @access public
-     * @param string $data
-     * @return string $data
+     * @param array
+     * @param mixed $data 
+     * @return mixed $data
      */
     public function clean($data) {
-        $data = stripslashes($data);
-        $data = html_entity_decode($data, ENT_QUOTES, 'UTF-8');
-        $data = nl2br($data);
-        $data = urldecode($data);
+        if (!is_array($data)) {
+            $data = stripslashes($data);
+            $data = html_entity_decode($data, ENT_QUOTES, 'UTF-8');
+            $data = nl2br($data);
+            $data = urldecode($data);
+        } else {
+            //Self call function to sanitize array data
+            $data = array_map(array($this, 'clean'), $data);
+        }
         return $data;
+    }
+
+    /**
+     * The function returns a single data from an array variable based on parameters
+     * 
+     * Example usage: 
+     *  getSingleData($aResults,["id"=>"1"],"street");
+     * 
+     * @access public
+     * @param1 array $data
+     * @param2 array $filter
+     * @param3 string colum name 
+     * @return mixed $data
+     */
+    public function getSingleData($data, $filter, $column = false) {
+        $aRet = array_filter($data, function($elem) use($filter) {
+            return $elem[key($filter)] == $filter[key($filter)];
+        });
+        return (!empty($ret) ? false : $aRet[key($aRet)][$column]);
+    }
+
+    /**
+     * The function returns a single data from an array variable based on parameters
+     * 
+     * Example usage: 
+     *  getSingleData($aResults,"TimeStamp"));
+     * 
+     * @access public
+     * @param1 array $data
+     * @param2 string colum name 
+     * @return mixed $data
+     */
+    public function getSingleDataFormfistRow($data, $column) {
+        if (empty($data)){            return false;}
+        
+       return (@is_array($data[0]) ?           array_shift(array_values($data))[$column]:$data[$column]);
     }
 
     /**
@@ -791,10 +808,11 @@ class DB {
      *
      */
     public function generateReport($res) {
-        if (count($res) < 1) {
+        if (empty($res)) {
             return FALSE;
         }
-        $fields = array_keys($res[0]);
+
+        $fields = array_keys(array_shift(array_values($res)));
         echo '<div><table class="table table-bordered table-hover table-condensed" style="width: 100%;" >';
         echo "<thead style=\"  white-space: nowrap; \">";
         foreach ($fields as $fileld) {
@@ -803,37 +821,28 @@ class DB {
         }
         echo "</thead><tbody>";
 
-        foreach ($res as $row) {
+        foreach ($res as $key1d => $values1d) {
             echo "<tr>";
-            foreach ($fields as $fileld) {
+            foreach ($values1d as $key2d => $values2d) {
 
-                echo "<td>" . $row[$fileld] . "</td>";
+                echo "<td>  $values2d </td>";
             }
             echo "</tr>";
         }
+
+
         echo "</table>";
+
         echo "</td></tr></tbody></table></div>";
 
         return True;
     }
-
-    /**
-     * This method trying to build file compatible to MS Excel.
-     * Requre class ExportData 
-     *
-     * Example usage:
-     * generateExcel( $DB->get_results($query)) ;
-     *
-     * @access public
-     * @param array
-     * @return bool
-     *
-     */
     public function generateExcel($res,$filename="default") {
         if (count($res) < 1) {
             return FALSE;
         }
         
+        $res= self::clean($res);
         require 'ExportData.php';
         if ( $filename=="default"){
         $now = gmdate("D, d M Y H:i:s");
@@ -863,7 +872,29 @@ class DB {
 
         return true;
     }
+    public function generateList($res) {
+        if (empty($res)) {
+            return FALSE;
+        }
 
+        $fields = array_keys(array_shift(array_values($res)));
+        echo '<div>';
+        
+        foreach ($res as $key1d => $values1d) {
+            echo '<table style= "  font-family: Trebuchet MS, Arial, Helvetica, sans-serif;    border-collapse: collapse;    width: 100%;"><dl class="dl-horizontal">';
+            foreach ($values1d as $key2d => $values2d) {
+
+                echo '<tr><td style="text-align: left; float: right;"><b> '.ucfirst(strtolower($key2d)). " </b></td><td style= 'padding-left : 12px;'> $values2d</td></tr>";
+            }
+            echo "</dl><table><br/>";
+        }
+
+
+          echo "</div>";
+
+        return True;
+    }
 }
+
 
 //end class DB

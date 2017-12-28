@@ -8,7 +8,7 @@ If ((isset($_REQUEST['login'])) and ( !(empty($_REQUEST['login']))))
     $login = $_REQUEST["login"]; else die(); 
 
 $database = new DB();
-$query = "SELECT `users`.`opis` as 'opis', `users`.`OfficePhone` as 'telefon' "
+$query = "SELECT `users`.`opis` as 'opis', TRIM( LEADING '+48 ' FROM  MobilePhone) as 'telefon' "
         . "FROM "
         . "`users`, `komputery` "
         . "WHERE "

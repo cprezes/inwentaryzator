@@ -20,25 +20,20 @@ if (empty($_REQUEST['login'])) {
 
             include_once 'stale.php';
             include_once('./include/userView.php');
-
-
+            require_once './include/baza.php';
+            
+            $query = "select lower(login) as Login , opis as Imie_Nazwisko, EmailAddress as E_mail, MobilePhone as Telefon,  case Enabled when 'True' then '' when 'False' then 'Zablokowany'  end as Czy_zablokowany ,LastLogonDate as Ostatnio_Sie_Logowal,Manager as Przelozony,CONCAT(hex(LOWER(login)), '.jpg') as Zdjęcie from users";
+ 
+            $oBaza=new DB(DB_HOST, KONTO2, KONTO2_PASS);
             $prg = new userView();
 
-
-            $link = mysql_connect(DB_HOST, KONTO2, KONTO2_PASS);
-            mysql_set_charset('utf8', $link);
-            mysql_select_db(DB_NAME);
-            $res = mysql_query("SELECT `data` FROM `users` limit 1 ");
-            echo " Ostatnia aktualizacja =====>>>" . (mysql_fetch_assoc($res)["data"] ) . "<br>";
-
-            $query = "select lower(login) as Login , opis as Imie_Nazwisko, EmailAddress as E_mail, MobilePhone as Telefon, "
-                    . "case Enabled when 'True' then '' when 'False' then 'Zablokowany'  end as Czy_zablokowany ,CONCAT(hex(LOWER(login)), '.jpg') as Zdjęcie "
-                    . "from users";
-
-
-            $res = mysql_query($query);
-
-
+            $res = $oBaza->get_results($query);
+            
+            $data=$oBaza->get_row("SELECT `data` FROM `users` limit 1");
+            
+            echo " Ostatnia aktualizacja =====>>>" . $data[0] . "<br>";
+            
+            
 
             $target_dir = ZDJECIA_PRACOWNIKOW_FOLDER;
             $files = array_diff(scandir($target_dir), array('.', '..'));

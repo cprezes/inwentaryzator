@@ -90,6 +90,7 @@ if (!(empty($_REQUEST['nazwa']))) {
                 "StreetAddress",
                 "PostalCode",
                 "State",
+                "Manager",
                 "LastLogonDate"
             );
             $database->insert_multi('users', $fields, $output);
