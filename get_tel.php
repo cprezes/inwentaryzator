@@ -25,15 +25,16 @@ $res = $oBaza->get_row("SELECT `data` FROM `users` limit 1 ");
 
 echo " Ostatnia aktualizacja =====>>> $res[0] <br>";
 
-$queryToRun = "select opis as Imie_Nazwisko, concat( IF(MobilePhone  = OfficePhone , '', concat( OfficePhone,'<br/>') ), TRIM( LEADING '+48 ' FROM  MobilePhone)) as Telefon, LOWER(EmailAddress) as 'E-Mail', Title as Stanowisko , Department as Dział ,  StreetAddress as Adres ,CONCAT(hex(LOWER(login)), '.jpg') as Zdjęcie  from `users` where ( length(OfficePhone) > 5 or  length(MobilePhone) > 5 )and Enabled like 'True' ORDER BY 1 ASC";
+$queryToRun = "select opis as Imie_Nazwisko, concat( IF(MobilePhone  = OfficePhone , '', concat( OfficePhone,'<br/>') ), TRIM( LEADING '+48 ' FROM  MobilePhone)) as Telefon, LOWER(EmailAddress) as 'E-Mail', Title as Stanowisko , Department as Dział ,  StreetAddress as Adres ,(LOWER(opis)) as Zdjęcie  from `users` where ( length(OfficePhone) > 5 or  length(MobilePhone) > 5 )and Enabled like 'True' ORDER BY 1 ASC";
 $res = $oBaza->get_results($queryToRun);
 $oUserView = new userView();
 $oUserView->mysql_resource = $res;
 
 //pobierz liste plików z katalogu
-$target_dir = ZDJECIA_PRACOWNIKOW_FOLDER;
-$files = array_diff(scandir($target_dir), array('.', '..'));
-$oUserView->filesArray = $files;
-$oUserView->targetDir = $target_dir;
+//$target_dir = ZDJECIA_PRACOWNIKOW_FOLDER;
+//$files = array_diff(scandir($target_dir), array('.', '..'));
+//$oUserView->filesArray = $files;
+//$oUserView->targetDir = $target_dir;
+$oUserView->nameFileldToDecorate = "Zdjęcie";
 $oUserView->filesArray = $oUserView->array_change_value_case($oUserView->filesArray);
 $oUserView->generateReport();

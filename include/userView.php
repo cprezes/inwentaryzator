@@ -7,7 +7,9 @@ class userView {
     public $mysql_resource;
     public $filesArray = array();
     public $targetDir;
+    public $nameFileldToDecorate;
     private $field_count;
+    
 
                 function __construct() {
         $this->allowUpload = FALSE;
@@ -57,11 +59,11 @@ class userView {
 
     private function headerDarw($line) {
         foreach ($line as $field) {
-            $this->headerFieldDocorator($field);
+            $this->headerFieldDecorator($field);
         }
     }
 
-    private function headerFieldDocorator($field) {
+    private function headerFieldDecorator($field) {
         echo "<th><center>" . $field . "</center></th>";
     }
 
@@ -79,13 +81,11 @@ class userView {
          foreach ($this->headerFields as $fileld){
             $sField = $rows[$fileld];
    
-            if ($i == $this->field_count-1 ) {
+             if ($this->nameFileldToDecorate==$fileld) {
                 $sField = strtolower($sField);
-                if (in_array($sField, $this->filesArray)) {
-                    $this->fieldDecorator($sField, "plusLink");
-                } else {
-                    $this->fieldDecorator($sField, "noLink");
-                }
+                    $this->fieldDecoratorRedirect($sField, "plusLink");
+         
+               
             } else {
                 $this->fieldDecorator($sField);
             
@@ -93,7 +93,7 @@ class userView {
           $i++;
        }
      
-            }
+    }
   
 
     private function fieldDecorator($field, $type = "normal") {
@@ -119,6 +119,28 @@ class userView {
         }
         echo "</td>";
     }
+    
+        private function fieldDecoratorRedirect($field, $type = "normal") {
+        echo "<td>";
+       
+        
+        if ($type == "plusLink") {
+   
+
+            echo" <a href='http://intranet/kontakty/baza-pracownikow/index,motylanoga," . $field .
+            ".html#footer' onclick=\"window.open(this.href, 'mywin','left=20,top=20,width=600,height=600,toolbar=0,resizable=1'); return false;\" "
+            . ">Zdjecie</a>";
+
+            if ($this->allowUpload) {
+                $this->addUploadForm($field);
+            }
+
+        } else {
+            echo $field;
+        }
+        echo "</td>";
+    }
+
 
     private function addUploadForm($field) {
         ?>   

@@ -1,5 +1,5 @@
 <?php
-include_once '../../include/header.php';
+//include_once '../../include/header.php';
 require_once '../../stale.php';
 require_once '../../include/baza.php';
 
@@ -10,6 +10,7 @@ $explode = explode("/", $adres_url);
 $explode = array_slice($explode, 0, -2);
 $adres_url = implode("/", $explode);
 $fileUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $adres_url;
+$root_serwera = ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . "/" . explode("/", $_SERVER['PHP_SELF'])[1] . "/";
 ?>
 <head>
     <script>
@@ -60,4 +61,13 @@ $fileUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'h
         }
     }
     ?>
+Jeszcze raz bardziej szczegółowa Instrukcja czyli jak instalować:
+<ul>
+ 	<li>Zaznacz całą linijkę z kodem zaczynającą się od nazwy aplikacji następnie skopiuj ją np.: ctrl+c</li>
+ 	<li>Wejdź na dysk U:</li>
+ 	<li>Uruchom program instalaTOR.exe i wklej skopiowaną ścieżkę ctrl+v</li>
+ 	<li>Zatwierdź następnie uruchomi się instalator</li>
+</ul>
+*Dla informacji, link składa się [daty do kiedy jest aktywny] _ [nazwa Aplikacji] &gt; [bardzo istotny ciąg losowych znaków]
+   <link rel="stylesheet" href="<?php echo $root_serwera; ?>css/bootstrap.css" />
 </body>
