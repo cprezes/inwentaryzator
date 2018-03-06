@@ -6,6 +6,8 @@ require_once '../../include/baza.php';
 $adres_tmp = basename($_SERVER['PHP_SELF']) . "?";
 $adres_url = $_SERVER["REQUEST_URI"];
 
+$instlator="https://info/intranet/pliki/instalaTOR.exe";
+
 $explode = explode("/", $adres_url);
 $explode = array_slice($explode, 0, -2);
 $adres_url = implode("/", $explode);
@@ -39,10 +41,7 @@ $root_serwera = ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https
         </div>
     </div>
     <?php
-    showInstall();
 
-    function showInstall() {
-        $instlator = "u:\instalaTOR.exe";
         $oBaza = new DB();
         $query = 'select  hex(CONCAT(token,"=",hash)) as link , UNHEX(path) as path ,  TIMESTAMPDIFF(DAY,NOW(),timestamp)+dni as aktywny_jeszcze ,  DATE_ADD(timestamp , INTERVAL dni DAY) as timestamp , publiczne from `instalator_dane` ORDER BY timestamp DESC';
         $aResults = $oBaza->get_results($query);
@@ -56,10 +55,10 @@ $root_serwera = ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https
                 $hashInstalcji = date_parse($row["timestamp"])["year"] . "/" . date_parse($row["timestamp"])["month"] . "/" . date_parse($row["timestamp"])["day"] . "__" . end((explode('\\', $row["path"]))) . ">" . $row["link"];
                 echo "<dl class=\"dl-horizontal , text-overflow\"> <dt > Plik aplikacji: </dt><dd><b> $nazwaPrg </b> Więcej Informacji <a href='link.php?link=$nazwaPrg' target='_blank' > tutaj</a></dd> $tagTmp</dl> <br/>";
                 echo '<div class="col-xs-4"><input class="form-control" type="text"  value= "DO' . $hashInstalcji . '"/></div>';
-                echo '<button type="button" class="btn btn-success" value="' . $hashInstalcji . '" onclick="copyToClipboard(this.value)"> Do skopiowania</button>  <a href="http://info/intranet/pliki/instalaTOR.exe" > <button " type="button"  class="btn btn-danger"  >Uruchom Instalator</button></a>  <br/> <hr>';
+                echo '<button type="button" class="btn btn-success" value="' . $hashInstalcji . '" onclick="copyToClipboard(this.value)"> Do skopiowania</button>  <a href="'.$instlator.'" > <button " type="button"  class="btn btn-danger"  >Uruchom Instalator</button></a>  <br/> <hr>';
             }
         }
-    }
+
     ?>
 Jeszcze raz bardziej szczegółowa Instrukcja czyli jak instalować:
 <ul>

@@ -2,24 +2,24 @@
 
 class Session
 {
-    
-    public static function init()
+
+    public  function init()
     {
         @session_start();
     }
     
-    public static function set($key, $value)
+    public  function set($key, $value)
     {
         $_SESSION[$key] = $value;
     }
     
-    public static function get($key)
+    public  function get($key)
     {
         if (isset($_SESSION[$key]))
         return $_SESSION[$key];
     }
     
-    public static function destroy()
+    public  function destroy()
     {
         unset($_SESSION);
         session_destroy();
