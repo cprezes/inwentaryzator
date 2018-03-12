@@ -9,16 +9,39 @@ If ((isset($_REQUEST['unike'])) and ( !(empty($_REQUEST['unike']))))
     $unike = $_REQUEST["unike"];
 If ((isset($_REQUEST['inne'])) and ( !(empty($_REQUEST['inne']))))
     $tymaczasowa_nazawa_bazy = "inne";
-If ((isset($_REQUEST['ostatnie'])) and ( !(empty($_REQUEST['ostatnie'])))){
-    $ostatnie = $_REQUEST["ostatnie"];
-$zakresStart = substr($ostatnie ,0, strpos($ostatnie,","));
-if (!$zakresStart) $zakresStart=0;
-$zakresKoniec = substr($ostatnie , strpos($ostatnie,",")+1);
-if (!$zakresKoniec) $zakresKoniec=0;
+
+If ((isset($_REQUEST['clear'])) and ( !(empty($_REQUEST['clear'])))) {
+    Session::set("zakresStart", FALSE);
+    Session::set("zakresKoniec", FALSE);
 }
-else{
-    $zakresStart =0;
-    $zakresKoniec =2240;
+
+
+If ((isset($_REQUEST['ostatnie'])) and ( !(empty($_REQUEST['ostatnie'])))) {
+    $ostatnie = $_REQUEST["ostatnie"];
+
+    $zakresStart = substr($ostatnie, 0, strpos($ostatnie, ","));
+    $zakresKoniec = substr($ostatnie, strpos($ostatnie, ",") + 1);
+
+
+    if (!$zakresStart)
+        $zakresStart = 0;
+
+    if (!$zakresKoniec)
+        $zakresKoniec = 0;
+
+    Session::set("zakresStart", $zakresStart);
+    Session::set("zakresKoniec", $zakresKoniec);
+}
+else {
+    if (Session::get("zakresStart"))
+        $zakresStart = Session::get("zakresStart");
+    else
+        $zakresStart = 0;
+
+    if (Session::get("zakresKoniec"))
+        $zakresKoniec = Session::get("zakresKoniec");
+    else
+        $zakresKoniec = 2240;
 }
 
 
@@ -31,38 +54,33 @@ echo "Interpretacja: Kolumna o nazwie <mark>$unike</mark> jest główną kolumna
 <link rel="stylesheet" href="<?php echo $root_serwera; ?>css/slider.css" />
 
 <script  src="<?php echo $root_serwera; ?>js/jq311.js" ></script>
-    <script  src="<?php echo $root_serwera; ?>js/slider.js" ></script>
-    <form action="<?php echo $adres_uri ; ?>" method="post">
-        
-        <input class="btn btn-primary btn-xs" type="submit" value="Pokaż dane z zakresu [dni] =>" >  &nbsp;&nbsp; 
-        <input  id="ostatnie" type="text" name="ostatnie" />
-        
+<script  src="<?php echo $root_serwera; ?>js/slider.js" ></script>
+<form action="<?php echo $adres_uri; ?>" method="post">
+
+    <input class="btn btn-primary btn-xs" type="submit" value="Pokaż dane z zakresu [dni] =>" >  <br/> 
+    <center> <input  id="ostatnie" type="text" name="ostatnie" /></center>
+
     <script  >
-        $("#ostatnie").slider({min: 0, max: 1800, value: [<?php echo $zakresStart; ?>, <?php echo $zakresKoniec ; ?>]});
+        $("#ostatnie").slider({min: 0, max: 1800, value: [<?php echo $zakresStart; ?>, <?php echo $zakresKoniec; ?>]});
     </script>
 
-    
+
 </form>
+<form action="<?php echo $adres_uri; ?>" method="post">
+
+    <input class="btn btn-primary btn-xs" type="submit" value="Resetuj zakresy" >
+    <input  name="clear" type="hidden" value="clear" />
+</form>
+
 <?php
-
-
 $adresFiltru = Session::get("AdresFiltru");
 
 $database = new DB();
-$database = DB::getInstance();
-//$query = "SELECT DISTINCT `$unike` FROM `$tymaczasowa_nazawa_bazy` ORDER BY `$unike` ";
-//$query = "SELECT t1.$unike , t1.login, t1.nazwa, data
-//FROM $tymaczasowa_nazawa_bazy as t1 ,(
-//    SELECT DISTINCT $unike 
-//    FROM  $tymaczasowa_nazawa_bazy ) as t2
-//LEFT OUTER JOIN t1  ON  t1.$unike = t2.$unike
-//GROUP BY login    
-//ORDER BY id DESC";
 
 $query = "select $unike , nazwa, login, MAX(data) as data, count(*) as logowan
 from (select * 
 from $tymaczasowa_nazawa_bazy
-    where  data <= DATE_ADD(now(), INTERVAL ". $zakresStart *-1 ." DAY)   and  data >= DATE_ADD(now(), INTERVAL ". $zakresKoniec* -1 ." DAY)  ) as t1
+    where  data <= DATE_ADD(now(), INTERVAL " . $zakresStart * -1 . " DAY)   and  data >= DATE_ADD(now(), INTERVAL " . $zakresKoniec * -1 . " DAY)  ) as t1
 group by $unike
 order by $unike";
 
@@ -86,3 +104,4 @@ foreach ($results as $row) {
 }
 echo "</table>";
 echo "<a href=\"" . Session::get("AdresPowrotu") . "\"> Powrót</a><br> ";
+log_add( "Unikalne po polu ".$unike."  ".$query);

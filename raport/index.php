@@ -14,3 +14,4 @@ foreach ($results as $row) {
     echo "<tr><td>" . $row['user']  . "</td><td>" . $row['opis'] . '</td><td><a href="raport.php?numer=' . $row['id'] . '"><center> Wykonaj </center></a></td><td><a href="edytuj.php?numer=' . $row['id'] . '"><center> Edytuj </center></a></td>';
 }
 echo " </tbody></table></div>";
+log_add("Ogladenie raportow");

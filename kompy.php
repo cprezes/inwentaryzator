@@ -12,6 +12,8 @@ echo "<div class=\"topright\">  <a href=\"licencje\">Licencje</a> | <a href=\"ra
 @ Session::set("raporty_host", DB_HOST);
 @ Session::set("raporty_db", DB_NAME);
 
+
+
 $numer = "";
 $login = "";
 $domena = "";
@@ -211,7 +213,10 @@ $results = $database->get_results($query);
 $wierszy = floatval($results[0]['ile']);
 $stron = (intval($wierszy / 100)) + 1;
 
+
+
 $query = "SELECT * FROM `komputery` $filtr  ORDER BY id DESC LIMIT " . ($strona - 1) * 100 . ",100 ";
+log_add($query);
 $results = $database->get_results($query);
 echo "<p>";
 include 'paginacja.php';

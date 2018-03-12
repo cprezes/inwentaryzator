@@ -4,4 +4,3 @@ include_once 'key.php';
 
 
 $database = new DB();
-$database = DB::getInstance();

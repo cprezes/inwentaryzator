@@ -169,6 +169,7 @@ $query = "SELECT * FROM `$TB_nazwa` WHERE  $filtr  "
         . " data <= DATE_ADD(now(), INTERVAL ". $zakresStart *-1 ." DAY)   and  data >= DATE_ADD(now(), INTERVAL ". $zakresKoniec* -1 ." DAY)  ORDER BY id DESC LIMIT " . ($strona - 1) * 100 . ",100 ";
 
 $results = $database->get_results($query);
+log_add($query);
 echo "<p>" ;
 include 'paginacja.php';
 ?>
