@@ -1,19 +1,20 @@
 <style>
     .item {
-        max-width:  115px;
-        max-height: 110px;
+        max-width:  155px;
+        max-height: 130px;
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-top: -55px;
-        margin-left: -55px;
+        margin-top: -75px;
+        margin-left: -65px;
     }
     img {
-        width: 100%;
+        width: auto;
         height: auto;
-        background-size: contain;
-        border-radius: 30px;
-        position: relative;
+        max-height: 155px;
+        max-width: 130px;
+        border-radius: 20px;
+
     }
     body
     {

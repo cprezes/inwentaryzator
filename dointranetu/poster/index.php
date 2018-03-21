@@ -20,7 +20,7 @@
   <style>
       iframe {
    height:155px;    
-   width:125px; 
+   width:130px; 
    border: 0 !important;
    overflow: hidden;
      
@@ -78,7 +78,7 @@ body
           <p><iframe src="images.php"  scrolling="no"></iframe> </p>
         </div>
         <div class="col-md-8">
-            <p> <iframe src="demo/"  style=" width:780px;    height:340px;  border-radius: 30px; " ></iframe> </p>
+            <p> <iframe src="demo/"  style=" width:780px;    height:340px;  border-radius: 30px; padding-right: 15px; " ></iframe> </p>
           
         </div>
         <div class="col-xs-12 col-md-2">
