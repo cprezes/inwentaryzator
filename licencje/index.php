@@ -38,19 +38,27 @@ Session::set("EditDB", TB_LIC)
 
 
     <?php
+    $db=new DB();
+
     require 'tabGen.php';
     $prg = new tabGen();
-
-    $link = mysql_connect(DB_HOST, KONTO2, KONTO2_PASS);
-    mysql_set_charset('utf8', $link);
-    mysql_select_db(DB_NAME);
-    $res = mysql_query("SELECT * from " . Session::get("EditDB") . " WHERE Ukryj = 0");
-    $prg->mysql_resource = $res;
+    $query = "SELECT * from " . Session::get("EditDB") . " WHERE Ukryj = 0";
+    $prg->fields = $db->get_results($query);
+   
+    //Colect data 
+      $query="select  lower(nazwa) as nazwa  from komputery where  data > DATE_ADD(now(), INTERVAL -1 MONTH) group by nazwa";
+      $prg->compNames =$prg->prepareCleanArray( $db->clean(array_column( $db->get_results($query),"nazwa")));
+      $query="select lower(login) as login  from `users` where Enabled like 'True'";
+      $prg->userLogin = $prg->prepareCleanArray( $db->clean(array_column( $db->get_results($query),"login")));
+      $query="SELECT lower(AppName) as AppName  from `instalacje` group by AppName order by 1";
+      $prg->appNames = $prg->prepareCleanArray( $db->clean(array_column( $db->get_results($query),"AppName")));
+    
     require_once ('../include/header.php');
     echo '<link rel="stylesheet" href="../css/bootstrap.css" /> <link rel="stylesheet" href="../css/style.css" />';
-    echo "<a style=' position: absolute; top: 0px; right: 10px;' href='" . $root_serwera . "kompy.php'>Powrót >></a><br> ";
+    echo "<a style=' position: absolute; top: 0px; right: 10px;' href='" . $root_serwera . "kompy.php'>Powrót >></a>";
+    echo "<table><tr><td>___INFO -->___ </td><td ".$prg->colors(TRUE)." style='width:100px;'>Pewnie OK.</td><td ".$prg->colors(FALSE)." style='width:300px;'>Nie naleziono lub zablokowana.</td> </tr></table>";
     echo "<p><b>Przy wypełnianiu komórek staraj się używać ja najwięcej danych ze słownika szczególnie w kolumnach gdzie słownik taki jest dostępny. 
-Do słownika możesz dostać się za pomocą skrótu [S] w bardziej istotnych kolumnach.</b> </p>";
+    Do słownika możesz dostać się za pomocą skrótu [S] w bardziej istotnych kolumnach.</b></p>";
 
     $prg->generateTable();
 

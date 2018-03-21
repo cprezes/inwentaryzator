@@ -7,6 +7,7 @@ $tmp2 = substr($tmp, 10);
 
 if (DEV == TRUE) { // wywal ten zapis na produkcji  
     Session::set("tokien", $tmp2);
+   Session::set("user", "DEV");
 }
 
 If ((isset($_REQUEST['tokien'])) and ( !(empty($_REQUEST['tokien'])))) {

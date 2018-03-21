@@ -33,7 +33,9 @@ $root_serwera = ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https
 			 > Instrukcja instalacji:<br/>
 				 1.Kliknij przycisk zielony [Do skopiowania] naciśnij Ctrl+C i Enter.<br/>
 				 2.Kliknij przycisk czerwony [Uruchom Instalator] wklej w oknie instalatora  skopiowaną treść.<br/>
-				3.Po krótkiej chwili uruchomi się instalacja programu. 
+                                 3.Po krótkiej chwili uruchomi się instalacja programu. <br/>
+                                 <br/>
+                                Jeśli potrzebujesz innej aplikacji, której nie ma na liście lub aplikacja wygasła i trzeba ją dodać ponownie napisz na <a href="https://info/sd/" target="_blank">Systemie zgłoszeniowym</a>
 
 
           </p>

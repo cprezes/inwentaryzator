@@ -24,9 +24,8 @@ If ((isset($_REQUEST['fildID'])) and ( !(empty($_REQUEST['fildID'])))) {
 
 
     $database = new DB();
-    $database = DB::getInstance();
 
-    //Log changes
+    //Log change
     $return = $database->get_results("SELECT $column FROM " . Session::get("EditDB") . " WHERE Id=$id");
     $oldValue = $return[0][$column];
     $return = $database->get_results("SELECT Rodzaj_Prg FROM " . Session::get("EditDB") . " WHERE Id=$id");
@@ -54,7 +53,6 @@ If ((isset($_REQUEST['fildID'])) and ( !(empty($_REQUEST['fildID'])))) {
     echo $return[0][$column];
 } elseif ((isset($_REQUEST['nowy']))) {
     $database = new DB();
-    $database = DB::getInstance();
 
     $user_data = array(
         'Rodzaj_Prg' => 'Pusta'

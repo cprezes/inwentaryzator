@@ -6,7 +6,6 @@ include_once '../loader.php';
 echo "<div class=\"text-center\"><a href=\"edytuj.php?numer=-1\"><center>Nowy raport </center></a></div><div  class=\"topright\"><a href=\"" . Session::get("AdresPowrotu") . "\"> Powrót >></a></div>";
 
 $database = new DB();
-$database = DB::getInstance();
 $query = "SELECT * FROM zapytania WHERE widoczny  like '1' ORDER BY id DESC ";
 $results = $database->get_results($query);
 echo "<div>    <table class=\"table table-bordered table-hover table-condensed \" ><tbody>";
