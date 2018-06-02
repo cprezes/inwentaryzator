@@ -13,7 +13,7 @@ td {
 
 </style>   
 <?php
-$contents = file_get_contents('http://nas01.mostwar1.local:8081/');
+$contents = file_get_contents('http://nas01.war1.local:8081/');
 if (strlen($contents) < 10){
 echo "<h1> Serwis nie działa skontaktuj się z działem IT ";
 die;    

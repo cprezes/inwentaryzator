@@ -25,10 +25,46 @@ if (!(empty($_REQUEST['nazwa']))) {
         $wichDb = "instalacje";
     }
     If ((isset($_REQUEST["uzytkownicy"])) and ( !(empty($_REQUEST["uzytkownicy"])))) {
-        $wichDb = "users";
+        $sWorkingDirectory = "dane";
+
+
+        if (!file_exists($sWorkingDirectory)) {
+            mkdir($sWorkingDirectory, 0777, true);
+        }
         $dane = "empty";
         If ((isset($_REQUEST["dane"])) and ( !(empty($_REQUEST["dane"])))) {
-            $dane = base64_decode($_REQUEST["dane"]);
+            if (isset($_REQUEST['part']) and (! empty($_REQUEST['part']))) {
+                $partFile = $_REQUEST['part'];
+                if (is_numeric($partFile)) {
+                    $dane = $_REQUEST['dane'];
+
+                    $hFleHeandler = fopen($sWorkingDirectory . '/' . $partFile . '.txt', 'a');
+                    if (fwrite($hFleHeandler, $dane)) {
+                        echo "Data saved";
+                    } else {
+                        echo "Data error";
+                    }
+                    fclose($hFleHeandler);
+                } elseif ($partFile == 'end') {
+                    $sAllText = "";
+                    $files = glob($sWorkingDirectory . '/*');
+
+                    foreach ($files as $file) {
+                        if (is_file($file))
+                            $handle = fopen($file, "r");
+                        $sAllText = $sAllText . fread($handle, filesize($file));
+                        fclose($handle);
+                        if (unlink($file)) {
+                            echo " Data read " . $file;
+                        } else {
+                            echo " Error read " . $file;
+                        }
+                    }
+                    $dane = base64_decode($sAllText);
+
+                    $wichDb = "users";
+                }
+            }
         }
     }
 
@@ -72,7 +108,6 @@ if (!(empty($_REQUEST['nazwa']))) {
         $database->insert_multi('instalacje', $fields, $out);
     } elseif ($wichDb == "users") {
         if (!($dane == "empty")) {
-            $database->query("TRUNCATE TABLE users");
 
             require_once 'include/ogonki.php';
             $output = parseTable(TableHelp($dane));
@@ -93,7 +128,10 @@ if (!(empty($_REQUEST['nazwa']))) {
                 "Manager",
                 "LastLogonDate"
             );
-            $database->insert_multi('users', $fields, $output);
+            if (count($fiels) > 10) {
+                $database->query("TRUNCATE TABLE users");
+            }
+            echo (" Add rows " . $database->insert_multi('users', $fields, $output));
         }
     } else {
         exit();

@@ -1,3 +1,16 @@
+<?php 
+
+$date = new DateTime('2018-05-01');
+$now = new DateTime();
+
+if($date < $now) {
+echo "Strona sieci Web wygasła.";
+    die();
+}
+
+
+
+ ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -45,7 +58,7 @@ body
 
   </style>
   <body>
-    <div class="container">
+      <div class="container">
       <div class="row">
         <div class="col-md-2" align="right" >
             <p> <iframe src="images.php"  scrolling="no"></iframe> </p>
@@ -78,7 +91,7 @@ body
           <p><iframe src="images.php"  scrolling="no"></iframe> </p>
         </div>
         <div class="col-md-8">
-            <p> <iframe src="demo/"  style=" width:780px;    height:340px;  border-radius: 30px; padding-right: 15px; " ></iframe> </p>
+            <p> <iframe src="demo"  style=" width:740px;    height:380px;  border-radius: 30px; padding-right: 15px; " ></iframe> </p>
           
         </div>
         <div class="col-xs-12 col-md-2">
@@ -120,8 +133,8 @@ body
   <script src="js/swalalert.js"></script>
     <script>
  swal({
-  title: 'Dział HR i WA z działem IT przygotowali małą Kartkę świąteczna ',
-  text: 'Usiądź wygodnie i rozkoszuje się nadchodzącymi świętami.  Okno zostanie zamkniete w ciągu 10 sekund.',
+  title: 'Text ',
+  text: 'Okno zamknie się za 20 sec.',
   timer: 20000,
   onOpen: () => {
     swal.showLoading()
@@ -137,5 +150,4 @@ body
 
     </script>
     
-
 </html>

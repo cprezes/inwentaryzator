@@ -8,6 +8,13 @@ function log_add($parametry = "") {
     // PRIMARY KEY (`id`)) ENGINE = InnoDB;
 
 
+        $parametry = str_replace(array('[\', \']'), ' ', $parametry);
+        $parametry = preg_replace('/\[.*\]/U', ' ', $parametry);
+        $parametry = preg_replace('/&(amp;)?#?[a-z0-9]+;/i', ' ', $parametry);
+        $parametry = htmlentities($parametry, ENT_COMPAT, 'utf-8');
+        $parametry = preg_replace('/&([a-z])(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig|quot|rsquo);/i', '\\1', $parametry);
+        $parametry = preg_replace(array('/[^a-z0-9]/i', '/[-]+/'), ' ', $parametry);
+    
     $link = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     $ip = $_SERVER['REMOTE_ADDR'];
     $user = "undefined";
@@ -25,6 +32,4 @@ function log_add($parametry = "") {
 
     $logDB->insert(LOG_DB_TABLE, $data);
 }
-
-
 
